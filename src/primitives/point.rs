@@ -1,4 +1,4 @@
-use super::Coord;
+use crate::Coord;
 use std::{
     fmt::Debug,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},

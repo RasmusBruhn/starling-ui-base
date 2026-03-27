@@ -1,4 +1,4 @@
-use super::{Coord, Point};
+use crate::{Coord, Point};
 
 /// An axis-aligned box in 2D-space
 #[derive(Copy, Clone, Debug, PartialEq)]
