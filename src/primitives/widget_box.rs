@@ -10,17 +10,6 @@ pub struct WidgetBox<T: Coord> {
 }
 
 impl<T: Coord> WidgetBox<T> {
-    /// Constructs a new box
-    ///
-    /// # Parameters
-    ///
-    /// ll: The position of the lower left corner of the box
-    ///
-    /// ur: The position of the upper right corner of the box
-    pub fn new(ll: Point<T>, ur: Point<T>) -> Self {
-        return Self { ll, ur };
-    }
-
     /// Constructs a new box from its center and size
     ///
     /// # Parameters
@@ -32,7 +21,7 @@ impl<T: Coord> WidgetBox<T> {
         let ll = center - size * T::from_f64(0.5).unwrap();
         let ur = center + size * T::from_f64(0.5).unwrap();
 
-        return Self::new(ll, ur);
+        return Self { ll, ur };
     }
 
     /// Retrieves the center of the box
@@ -55,50 +44,44 @@ mod tests {
     use super::*;
 
     #[test]
-    fn new() {
-        let ll = Point::new(2.0, 20.0);
-        let ur = Point::new(10.0, 30.0);
+    fn from_size() {
+        let center = Point { x: 6.0, y: 25.0 };
+        let size = Point { x: 8.0, y: 10.0 };
 
-        let result = WidgetBox::new(ll, ur);
+        let result = WidgetBox::from_size(&center, &size);
 
         let correct = WidgetBox {
-            ll: Point::new(2.0, 20.0),
-            ur: Point::new(10.0, 30.0),
+            ll: Point { x: 2.0, y: 20.0 },
+            ur: Point { x: 10.0, y: 30.0 },
         };
 
         assert_eq!(result, correct);
     }
 
     #[test]
-    fn from_size() {
-        let center = Point::new(6.0, 25.0);
-        let size = Point::new(8.0, 10.0);
-
-        let result = WidgetBox::from_size(&center, &size);
-
-        let correct = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
-
-        assert_eq!(result, correct);
-    }
-
-    #[test]
     fn get_center() {
-        let input = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
+        let input = WidgetBox {
+            ll: Point { x: 2.0, y: 20.0 },
+            ur: Point { x: 10.0, y: 30.0 },
+        };
 
         let result = input.get_center();
 
-        let correct = Point::new(6.0, 25.0);
+        let correct = Point { x: 6.0, y: 25.0 };
 
         assert_eq!(result, correct);
     }
 
     #[test]
     fn get_size() {
-        let input = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
+        let input = WidgetBox {
+            ll: Point { x: 2.0, y: 20.0 },
+            ur: Point { x: 10.0, y: 30.0 },
+        };
 
         let result = input.get_size();
 
-        let correct = Point::new(8.0, 10.0);
+        let correct = Point { x: 8.0, y: 10.0 };
 
         assert_eq!(result, correct);
     }

@@ -13,19 +13,6 @@ pub struct Point<T: Coord> {
     pub y: T,
 }
 
-impl<T: Coord> Point<T> {
-    /// Constructs a new 2D point
-    ///
-    /// # Parameters
-    ///
-    /// x: The x-coordinate of the point
-    ///
-    /// y: The y-coordinate of the point
-    pub fn new(x: T, y: T) -> Self {
-        return Self { x, y };
-    }
-}
-
 impl<T: Coord> Neg for &Point<T> {
     type Output = Point<T>;
 
@@ -33,7 +20,7 @@ impl<T: Coord> Neg for &Point<T> {
         let x = -self.x;
         let y = -self.y;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -52,7 +39,7 @@ impl<T: Coord> Add for &Point<T> {
         let x = self.x + rhs.x;
         let y = self.y + rhs.y;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -100,7 +87,7 @@ impl<T: Coord> Sub for &Point<T> {
         let x = self.x - rhs.x;
         let y = self.y - rhs.y;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -148,7 +135,7 @@ impl<T: Coord> Mul for &Point<T> {
         let x = self.x * rhs.x;
         let y = self.y * rhs.y;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -196,7 +183,7 @@ impl<T: Coord> Div for &Point<T> {
         let x = self.x / rhs.x;
         let y = self.y / rhs.y;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -244,7 +231,7 @@ impl<T: Coord> Mul<&T> for &Point<T> {
         let x = self.x * *rhs;
         let y = self.y * *rhs;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -292,7 +279,7 @@ impl<T: Coord> Div<&T> for &Point<T> {
         let x = self.x / *rhs;
         let y = self.y / *rhs;
 
-        return Point::new(x, y);
+        return Point { x, y };
     }
 }
 
@@ -339,7 +326,7 @@ mod tests {
 
     #[test]
     fn new() {
-        let result = Point::new(1.0, 2.0);
+        let result = Point { x: 1.0, y: 2.0 };
 
         let correct = Point { x: 1.0, y: 2.0 };
 
@@ -348,12 +335,12 @@ mod tests {
 
     #[test]
     fn neg() {
-        let input = Point::new(1.0, 10.0);
+        let input = Point { x: 1.0, y: 10.0 };
 
         let result1 = -input;
         let result2 = -&input;
 
-        let correct = Point::new(-1.0, -10.0);
+        let correct = Point { x: -1.0, y: -10.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -361,15 +348,15 @@ mod tests {
 
     #[test]
     fn add() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let result1 = input1 + input2;
         let result2 = &input1 + input2;
         let result3 = input1 + &input2;
         let result4 = &input1 + &input2;
 
-        let correct = Point::new(8.0, 620.0);
+        let correct = Point { x: 8.0, y: 620.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -379,8 +366,8 @@ mod tests {
 
     #[test]
     fn add_assign() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let mut result1 = input1;
         let mut result2 = input1;
@@ -388,7 +375,7 @@ mod tests {
         result1 += input2;
         result2 += input2;
 
-        let correct = Point::new(8.0, 620.0);
+        let correct = Point { x: 8.0, y: 620.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -396,15 +383,15 @@ mod tests {
 
     #[test]
     fn sub() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let result1 = input1 - input2;
         let result2 = &input1 - input2;
         let result3 = input1 - &input2;
         let result4 = &input1 - &input2;
 
-        let correct = Point::new(4.0, 580.0);
+        let correct = Point { x: 4.0, y: 580.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -414,8 +401,8 @@ mod tests {
 
     #[test]
     fn sub_assign() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let mut result1 = input1;
         let mut result2 = input1;
@@ -423,7 +410,7 @@ mod tests {
         result1 -= input2;
         result2 -= input2;
 
-        let correct = Point::new(4.0, 580.0);
+        let correct = Point { x: 4.0, y: 580.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -431,15 +418,18 @@ mod tests {
 
     #[test]
     fn mul() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let result1 = input1 * input2;
         let result2 = &input1 * input2;
         let result3 = input1 * &input2;
         let result4 = &input1 * &input2;
 
-        let correct = Point::new(12.0, 12000.0);
+        let correct = Point {
+            x: 12.0,
+            y: 12000.0,
+        };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -449,8 +439,8 @@ mod tests {
 
     #[test]
     fn mul_assign() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let mut result1 = input1;
         let mut result2 = input1;
@@ -458,7 +448,10 @@ mod tests {
         result1 *= input2;
         result2 *= input2;
 
-        let correct = Point::new(12.0, 12000.0);
+        let correct = Point {
+            x: 12.0,
+            y: 12000.0,
+        };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -466,15 +459,15 @@ mod tests {
 
     #[test]
     fn div() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let result1 = input1 / input2;
         let result2 = &input1 / input2;
         let result3 = input1 / &input2;
         let result4 = &input1 / &input2;
 
-        let correct = Point::new(3.0, 30.0);
+        let correct = Point { x: 3.0, y: 30.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -484,8 +477,8 @@ mod tests {
 
     #[test]
     fn div_assign() {
-        let input1 = Point::new(6.0, 600.0);
-        let input2 = Point::new(2.0, 20.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
+        let input2 = Point { x: 2.0, y: 20.0 };
 
         let mut result1 = input1;
         let mut result2 = input1;
@@ -493,7 +486,7 @@ mod tests {
         result1 /= input2;
         result2 /= input2;
 
-        let correct = Point::new(3.0, 30.0);
+        let correct = Point { x: 3.0, y: 30.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -501,7 +494,7 @@ mod tests {
 
     #[test]
     fn mul_scalar() {
-        let input1 = Point::new(6.0, 600.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
         let input2 = 2.0;
 
         let result1 = input1 * input2;
@@ -509,7 +502,7 @@ mod tests {
         let result3 = input1 * &input2;
         let result4 = &input1 * &input2;
 
-        let correct = Point::new(12.0, 1200.0);
+        let correct = Point { x: 12.0, y: 1200.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -519,7 +512,7 @@ mod tests {
 
     #[test]
     fn mul_assign_scalar() {
-        let input1 = Point::new(6.0, 600.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
         let input2 = 2.0;
 
         let mut result1 = input1;
@@ -528,7 +521,7 @@ mod tests {
         result1 *= input2;
         result2 *= input2;
 
-        let correct = Point::new(12.0, 1200.0);
+        let correct = Point { x: 12.0, y: 1200.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -536,7 +529,7 @@ mod tests {
 
     #[test]
     fn div_scalar() {
-        let input1 = Point::new(6.0, 600.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
         let input2 = 2.0;
 
         let result1 = input1 / input2;
@@ -544,7 +537,7 @@ mod tests {
         let result3 = input1 / &input2;
         let result4 = &input1 / &input2;
 
-        let correct = Point::new(3.0, 300.0);
+        let correct = Point { x: 3.0, y: 300.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);
@@ -554,7 +547,7 @@ mod tests {
 
     #[test]
     fn div_assign_scalar() {
-        let input1 = Point::new(6.0, 600.0);
+        let input1 = Point { x: 6.0, y: 600.0 };
         let input2 = 2.0;
 
         let mut result1 = input1;
@@ -563,7 +556,7 @@ mod tests {
         result1 /= input2;
         result2 /= input2;
 
-        let correct = Point::new(3.0, 300.0);
+        let correct = Point { x: 3.0, y: 300.0 };
 
         assert_eq!(result1, correct);
         assert_eq!(result2, correct);

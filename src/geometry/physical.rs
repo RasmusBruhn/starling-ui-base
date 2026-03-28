@@ -1,4 +1,4 @@
-use crate::{WidgetBox, Coord};
+use crate::{Coord, WidgetBox};
 
 /// A description of the position and size of a widget
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -10,17 +10,6 @@ pub struct WidgetPhysicalGeometry<T: Coord> {
 }
 
 impl<T: Coord> WidgetPhysicalGeometry<T> {
-    /// Constructs a new physical widget geometry
-    ///
-    /// # Parameters
-    ///
-    /// relative: The position and size of the widget relative to its parent viewport
-    ///
-    /// absolute: The position and size of the widget relative to its root viewport
-    pub fn new(relative: WidgetBox<T>, absolute: WidgetBox<T>) -> Self {
-        return Self { relative, absolute };
-    }
-
     /// Constructs a new physical widget geometry using the absolute geometry of
     /// its parent viewport
     ///
@@ -34,8 +23,36 @@ impl<T: Coord> WidgetPhysicalGeometry<T> {
         let size = relative.get_size() * parent_size;
         let ll = relative.ll * parent_size + parent.ll;
         let ur = ll + size;
-        let absolute = WidgetBox::new(ll, ur);
+        let absolute = WidgetBox { ll, ur };
 
-        return Self::new(relative, absolute);
+        return Self { relative, absolute };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Point;
+
+    #[test]
+    fn from_parent() {
+        let relative = WidgetBox {
+            ll: Point { x: 0.2, y: 0.3 },
+            ur: Point { x: 0.5, y: 0.9 },
+        };
+        let parent = WidgetBox {
+            ll: Point { x: 50.0, y: 30.0 },
+            ur: Point { x: 70.0, y: 40.0 },
+        };
+        let absolute = WidgetBox {
+            ll: Point { x: 54.0, y: 33.0 },
+            ur: Point { x: 60.0, y: 39.0 },
+        };
+
+        let result = WidgetPhysicalGeometry::from_parent(relative, &parent);
+
+        let correct = WidgetPhysicalGeometry { relative, absolute };
+
+        assert_eq!(result, correct);
     }
 }
