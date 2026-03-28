@@ -20,11 +20,7 @@ impl<T: Float> WidgetPhysicalGeometry<T> {
     ///
     /// parent: The position and size of the parent widget relative to its parent viewport
     pub fn from_parent(relative: WidgetBox<T>, parent: &WidgetBox<T>) -> Self {
-        let parent_size = parent.get_size();
-        let size = relative.get_size() * parent_size;
-        let ll = relative.ll * parent_size + parent.ll;
-        let ur = ll + size;
-        let absolute = WidgetBox { ll, ur };
+        let absolute = relative * parent.get_size() + parent.ll;
 
         return Self { relative, absolute };
     }

@@ -11,7 +11,8 @@ mod geometry;
 mod primitives;
 
 pub use geometry::{
-    WidgetGeometry, WidgetGeometryGenerator, WidgetGeometryInfo, WidgetPhysicalGeometry,
+    WidgetGeometry, WidgetGeometryGenerator, WidgetGeometryInfo, WidgetGeometryUpdateStatus,
+    WidgetPhysicalGeometry,
 };
 pub use primitives::{Point, WidgetBox};
 

@@ -1,12 +1,14 @@
-use crate::WidgetBox;
+use crate::{Point, WidgetBox};
 use num_traits::Float;
-use std::fmt::Debug;
+use std::{fmt::Debug, time::Instant};
 
 /// All information the genetator can use to construct the new geometry
 #[derive(Clone, Debug, PartialEq)]
 pub struct WidgetGeometryInfo<'a, T: Float> {
-    /// The absolute coordinates of the viewport this widget is inside
-    pub viewport: &'a WidgetBox<T>,
+    /// The current time
+    pub time: Instant,
+    /// The size in absolute coordinates of the viewport this widget is inside
+    pub viewport_size: Point<T>,
     /// The relative physical geometry of the previous sibling or None if this
     /// is the first widget in this viewport
     pub sibling: Option<&'a WidgetBox<T>>,
@@ -17,13 +19,16 @@ impl<'a, T: Float> WidgetGeometryInfo<'a, T> {
     ///
     /// # Parameters
     ///
-    /// viewport: The absolute coordinates of the viewport this widget is inside
+    /// viewport_size: The size in absolute coordinates of the viewport this widget is inside
     ///
     /// sibling: The relative coordinates of the geometry of the previous
     /// sibling widget
-    pub fn with_sibling(viewport: &'a WidgetBox<T>, sibling: &'a WidgetBox<T>) -> Self {
+    pub fn with_sibling(viewport_size: Point<T>, sibling: &'a WidgetBox<T>) -> Self {
+        let time = Instant::now();
+
         return Self {
-            viewport,
+            time,
+            viewport_size,
             sibling: Some(sibling),
         };
     }
@@ -32,10 +37,13 @@ impl<'a, T: Float> WidgetGeometryInfo<'a, T> {
     ///
     /// # Parameters
     ///
-    /// viewport: The absolute coordinates of the viewport this widget is inside
-    pub fn without_sibling(viewport: &'a WidgetBox<T>) -> Self {
+    /// viewport_size: The size in absolute coordinates of the viewport this widget is inside
+    pub fn without_sibling(viewport_size: Point<T>) -> Self {
+        let time = Instant::now();
+
         return Self {
-            viewport,
+            time,
+            viewport_size,
             sibling: None,
         };
     }
@@ -64,15 +72,13 @@ mod tests {
             ll: Point { x: 0.2, y: 0.3 },
             ur: Point { x: 0.5, y: 0.9 },
         };
-        let viewport = WidgetBox {
-            ll: Point { x: 50.0, y: 30.0 },
-            ur: Point { x: 70.0, y: 40.0 },
-        };
+        let viewport_size = Point { x: 20.0, y: 10.0 };
 
-        let result = WidgetGeometryInfo::with_sibling(&viewport, &sibling);
+        let result = WidgetGeometryInfo::with_sibling(viewport_size, &sibling);
 
         let correct = WidgetGeometryInfo {
-            viewport: &viewport,
+            time: result.time,
+            viewport_size,
             sibling: Some(&sibling),
         };
 
@@ -81,15 +87,13 @@ mod tests {
 
     #[test]
     fn without_sibling() {
-        let viewport = WidgetBox {
-            ll: Point { x: 50.0, y: 30.0 },
-            ur: Point { x: 70.0, y: 40.0 },
-        };
+        let viewport_size = Point { x: 20.0, y: 10.0 };
 
-        let result = WidgetGeometryInfo::without_sibling(&viewport);
+        let result = WidgetGeometryInfo::without_sibling(viewport_size);
 
         let correct = WidgetGeometryInfo {
-            viewport: &viewport,
+            time: result.time,
+            viewport_size,
             sibling: None,
         };
 
