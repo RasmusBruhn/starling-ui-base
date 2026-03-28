@@ -8,11 +8,13 @@
 mod geometry;
 mod primitives;
 
-pub use geometry::{WidgetGeometry, WidgetPhysicalGeometry};
-pub use primitives::{Box, Coord, Point};
+pub use geometry::{
+    WidgetGeometry, WidgetGeometryGenerator, WidgetGeometryInfo, WidgetPhysicalGeometry,
+};
+pub use primitives::{WidgetBox, Coord, Point};
 
 /// A generic widget, the base of all elements in the ui
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Debug)]
 pub struct Widget<T: Coord> {
     /// The description of the geometry of the widget
     geometry: WidgetGeometry<T>,

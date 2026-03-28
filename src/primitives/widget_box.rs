@@ -2,14 +2,14 @@ use crate::{Coord, Point};
 
 /// An axis-aligned box in 2D-space
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Box<T: Coord> {
+pub struct WidgetBox<T: Coord> {
     /// The position of the lower left corner of the box
     pub ll: Point<T>,
     /// The position of the upper right corner of the box
     pub ur: Point<T>,
 }
 
-impl<T: Coord> Box<T> {
+impl<T: Coord> WidgetBox<T> {
     /// Constructs a new box
     ///
     /// # Parameters
@@ -59,9 +59,9 @@ mod tests {
         let ll = Point::new(2.0, 20.0);
         let ur = Point::new(10.0, 30.0);
 
-        let result = Box::new(ll, ur);
+        let result = WidgetBox::new(ll, ur);
 
-        let correct = Box {
+        let correct = WidgetBox {
             ll: Point::new(2.0, 20.0),
             ur: Point::new(10.0, 30.0),
         };
@@ -74,16 +74,16 @@ mod tests {
         let center = Point::new(6.0, 25.0);
         let size = Point::new(8.0, 10.0);
 
-        let result = Box::from_size(&center, &size);
+        let result = WidgetBox::from_size(&center, &size);
 
-        let correct = Box::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
+        let correct = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
 
         assert_eq!(result, correct);
     }
 
     #[test]
     fn get_center() {
-        let input = Box::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
+        let input = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
 
         let result = input.get_center();
 
@@ -94,7 +94,7 @@ mod tests {
 
     #[test]
     fn get_size() {
-        let input = Box::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
+        let input = WidgetBox::new(Point::new(2.0, 20.0), Point::new(10.0, 30.0));
 
         let result = input.get_size();
 

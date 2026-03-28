@@ -1,12 +1,12 @@
-use crate::{Box, Coord};
+use crate::{WidgetBox, Coord};
 
 /// A description of the position and size of a widget
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct WidgetPhysicalGeometry<T: Coord> {
     /// The position and size of the widget relative to its parent viewport
-    relative: Box<T>,
+    pub relative: WidgetBox<T>,
     /// The position and size of the widget relative to its root viewport
-    absolute: Box<T>,
+    pub absolute: WidgetBox<T>,
 }
 
 impl<T: Coord> WidgetPhysicalGeometry<T> {
@@ -17,7 +17,7 @@ impl<T: Coord> WidgetPhysicalGeometry<T> {
     /// relative: The position and size of the widget relative to its parent viewport
     ///
     /// absolute: The position and size of the widget relative to its root viewport
-    pub fn new(relative: Box<T>, absolute: Box<T>) -> Self {
+    pub fn new(relative: WidgetBox<T>, absolute: WidgetBox<T>) -> Self {
         return Self { relative, absolute };
     }
 
@@ -29,23 +29,13 @@ impl<T: Coord> WidgetPhysicalGeometry<T> {
     /// relative: The position and size of the widget relative to its parent viewport
     ///
     /// parent: The position and size of the parent widget relative to its parent viewport
-    pub fn from_parent(relative: Box<T>, parent: &Box<T>) -> Self {
+    pub fn from_parent(relative: WidgetBox<T>, parent: &WidgetBox<T>) -> Self {
         let parent_size = parent.get_size();
         let size = relative.get_size() * parent_size;
         let ll = relative.ll * parent_size + parent.ll;
         let ur = ll + size;
-        let absolute = Box::new(ll, ur);
+        let absolute = WidgetBox::new(ll, ur);
 
         return Self::new(relative, absolute);
-    }
-
-    /// Retrieves the position and size of the widget relative to its parent viewport
-    pub fn get_relative(&self) -> &Box<T> {
-        return &self.relative;
-    }
-
-    /// Retrieves the position and size of the widget relative to its root viewport
-    pub fn get_absolute(&self) -> &Box<T> {
-        return &self.absolute;
     }
 }

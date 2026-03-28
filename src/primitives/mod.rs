@@ -1,7 +1,7 @@
 mod coord;
 mod point;
-mod axis_box;
+mod widget_box;
 
 pub use coord::Coord;
 pub use point::Point;
-pub use axis_box::Box;
+pub use widget_box::WidgetBox;
