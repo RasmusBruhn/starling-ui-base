@@ -5,12 +5,19 @@ use std::{
 };
 
 /// A single point in 2D-space
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
 pub struct Point<T: Float> {
     /// The x-coordinate of the point
     pub x: T,
     /// The y-coordinate of the point
     pub y: T,
+}
+
+impl<T: Float> PartialEq for Point<T> {
+    fn eq(&self, other: &Self) -> bool {
+        return (self.x - other.x) * (self.x - other.x) + (self.y - other.y) * (self.y * other.y)
+            < T::epsilon();
+    }
 }
 
 impl<T: Float> Neg for &Point<T> {
