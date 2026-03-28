@@ -1,4 +1,4 @@
-use crate::Coord;
+use num_traits::Float;
 
 mod generator;
 mod physical;
@@ -9,14 +9,14 @@ pub use physical::WidgetPhysicalGeometry;
 /// A description of the position and size of a widget and how to generate the
 /// layout
 #[derive(Debug)]
-pub struct WidgetGeometry<T: Coord> {
+pub struct WidgetGeometry<T: Float> {
     /// The position and size of the widget
     physical: WidgetPhysicalGeometry<T>,
     /// The generator for constructing the physical geometry
     generator: Box<dyn WidgetGeometryGenerator<T>>,
 }
 
-impl<T: Coord> WidgetGeometry<T> {
+impl<T: Float> WidgetGeometry<T> {
     /// Constructs a new widget geometry
     ///
     /// # Parameters
