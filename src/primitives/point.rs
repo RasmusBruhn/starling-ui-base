@@ -373,7 +373,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 += input2;
-        result2 += input2;
+        result2 += &input2;
 
         let correct = Point { x: 8.0, y: 620.0 };
 
@@ -408,7 +408,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 -= input2;
-        result2 -= input2;
+        result2 -= &input2;
 
         let correct = Point { x: 4.0, y: 580.0 };
 
@@ -446,7 +446,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 *= input2;
-        result2 *= input2;
+        result2 *= &input2;
 
         let correct = Point {
             x: 12.0,
@@ -484,7 +484,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 /= input2;
-        result2 /= input2;
+        result2 /= &input2;
 
         let correct = Point { x: 3.0, y: 30.0 };
 
@@ -519,7 +519,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 *= input2;
-        result2 *= input2;
+        result2 *= &input2;
 
         let correct = Point { x: 12.0, y: 1200.0 };
 
@@ -554,7 +554,7 @@ mod tests {
         let mut result2 = input1;
 
         result1 /= input2;
-        result2 /= input2;
+        result2 /= &input2;
 
         let correct = Point { x: 3.0, y: 300.0 };
 
