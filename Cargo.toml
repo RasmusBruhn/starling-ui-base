@@ -1,5 +1,5 @@
 [package]
-name = "starling-ui"
+name = "starling-ui-base"
 version = "0.1.0"
 edition = "2024"
 
