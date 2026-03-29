@@ -4,4 +4,4 @@ mod widget_box;
 
 pub use coord::Coord;
 pub use point::Point;
-pub use widget_box::WidgetBox;
+pub use widget_box::Rect;

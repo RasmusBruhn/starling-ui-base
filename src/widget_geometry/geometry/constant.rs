@@ -1,11 +1,11 @@
-use crate::{Coord, Point, WidgetBox, WidgetGeometryGenerator};
+use crate::{Coord, Point, Rect, GeometryGenerator};
 
 /// A constant widget geometry which always has the same geometry, useful for
 /// copying the viewport geometry
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constant<T: Coord> {
     /// The geometry of the widget
-    pub geometry: WidgetBox<T>,
+    pub geometry: Rect<T>,
 }
 
 impl<T: Coord> Constant<T> {
@@ -13,7 +13,7 @@ impl<T: Coord> Constant<T> {
     /// geometry
     pub fn new_full() -> Self {
         return Self {
-            geometry: WidgetBox {
+            geometry: Rect {
                 ll: Point {
                     x: T::from(0.0).unwrap(),
                     y: T::from(0.0).unwrap(),
@@ -40,13 +40,13 @@ impl<T: Coord> Constant<T> {
         let ur = ll + size;
 
         return Self {
-            geometry: WidgetBox { ll, ur },
+            geometry: Rect { ll, ur },
         };
     }
 }
 
-impl<T: Coord> WidgetGeometryGenerator<T> for Constant<T> {
-    fn generate(&self, _info: &crate::WidgetGeometryInfo<T>) -> WidgetBox<T> {
+impl<T: Coord> GeometryGenerator<T> for Constant<T> {
+    fn generate(&self, _info: &crate::GeometryInfo<T>) -> Rect<T> {
         return self.geometry;
     }
 }
@@ -60,7 +60,7 @@ mod tests {
         let result = Constant::new_full();
 
         let correct = Constant {
-            geometry: WidgetBox {
+            geometry: Rect {
                 ll: Point { x: 0.0, y: 0.0 },
                 ur: Point { x: 1.0, y: 1.0 },
             },
@@ -76,19 +76,19 @@ mod tests {
         let result3 = Constant::new_centered(&Point { x: 2.0, y: 2.0 });
 
         let correct1 = Constant {
-            geometry: WidgetBox {
+            geometry: Rect {
                 ll: Point { x: 0.25, y: 0.25 },
                 ur: Point { x: 0.75, y: 0.75 },
             },
         };
         let correct2 = Constant {
-            geometry: WidgetBox {
+            geometry: Rect {
                 ll: Point { x: 0.0, y: 0.0 },
                 ur: Point { x: 1.0, y: 1.0 },
             },
         };
         let correct3 = Constant {
-            geometry: WidgetBox {
+            geometry: Rect {
                 ll: Point { x: -0.5, y: -0.5 },
                 ur: Point { x: 1.5, y: 1.5 },
             },
@@ -101,16 +101,16 @@ mod tests {
 
     mod generator {
         use super::*;
-        use crate::WidgetGeometryInfo;
+        use crate::GeometryInfo;
 
         #[test]
         fn full() {
             let generator = Constant::new_full();
-            let info = WidgetGeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
+            let info = GeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
 
             let result = generator.generate(&info);
 
-            let correct = WidgetBox {
+            let correct = Rect {
                 ll: Point { x: 0.0, y: 0.0 },
                 ur: Point { x: 1.0, y: 1.0 },
             };
@@ -121,11 +121,11 @@ mod tests {
         #[test]
         fn small() {
             let generator = Constant::new_centered(&Point { x: 0.5, y: 0.8 });
-            let info = WidgetGeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
+            let info = GeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
 
             let result = generator.generate(&info);
 
-            let correct = WidgetBox {
+            let correct = Rect {
                 ll: Point { x: 0.25, y: 0.1 },
                 ur: Point { x: 0.75, y: 0.9 },
             };
@@ -136,16 +136,16 @@ mod tests {
         #[test]
         fn offset() {
             let generator = Constant {
-                geometry: WidgetBox {
+                geometry: Rect {
                     ll: Point { x: 0.1, y: 0.2 },
                     ur: Point { x: 0.8, y: 0.6 },
                 },
             };
-            let info = WidgetGeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
+            let info = GeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
 
             let result = generator.generate(&info);
 
-            let correct = WidgetBox {
+            let correct = Rect {
                 ll: Point { x: 0.1, y: 0.2 },
                 ur: Point { x: 0.8, y: 0.6 },
             };

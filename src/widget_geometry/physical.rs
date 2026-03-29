@@ -1,15 +1,15 @@
-use crate::{Coord, WidgetBox};
+use crate::{Coord, Rect};
 
 /// A description of the position and size of a widget
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct WidgetPhysicalGeometry<T: Coord> {
+pub struct PhysicalGeometry<T: Coord> {
     /// The position and size of the widget relative to its parent viewport
-    pub relative: WidgetBox<T>,
+    pub relative: Rect<T>,
     /// The position and size of the widget relative to its root viewport
-    pub absolute: WidgetBox<T>,
+    pub absolute: Rect<T>,
 }
 
-impl<T: Coord> WidgetPhysicalGeometry<T> {
+impl<T: Coord> PhysicalGeometry<T> {
     /// Constructs a new physical widget geometry using the absolute geometry of
     /// its parent viewport
     ///
@@ -18,7 +18,7 @@ impl<T: Coord> WidgetPhysicalGeometry<T> {
     /// relative: The position and size of the widget relative to its parent viewport
     ///
     /// parent: The position and size of the parent widget relative to its parent viewport
-    pub fn from_parent(relative: WidgetBox<T>, parent: &WidgetBox<T>) -> Self {
+    pub fn from_parent(relative: Rect<T>, parent: &Rect<T>) -> Self {
         let absolute = relative * parent.get_size() + parent.ll;
 
         return Self { relative, absolute };
@@ -32,22 +32,22 @@ mod tests {
 
     #[test]
     fn from_parent() {
-        let relative = WidgetBox {
+        let relative = Rect {
             ll: Point { x: 0.2, y: 0.3 },
             ur: Point { x: 0.5, y: 0.9 },
         };
-        let parent = WidgetBox {
+        let parent = Rect {
             ll: Point { x: 50.0, y: 30.0 },
             ur: Point { x: 70.0, y: 40.0 },
         };
-        let absolute = WidgetBox {
+        let absolute = Rect {
             ll: Point { x: 54.0, y: 33.0 },
             ur: Point { x: 60.0, y: 39.0 },
         };
 
-        let result = WidgetPhysicalGeometry::from_parent(relative, &parent);
+        let result = PhysicalGeometry::from_parent(relative, &parent);
 
-        let correct = WidgetPhysicalGeometry { relative, absolute };
+        let correct = PhysicalGeometry { relative, absolute };
 
         assert_eq!(result, correct);
     }
