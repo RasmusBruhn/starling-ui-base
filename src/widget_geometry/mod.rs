@@ -82,3 +82,74 @@ impl<T: Coord> WidgetGeometry<T> {
         return &self.physical;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Point;
+
+    #[test]
+    fn new() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+
+        let result = WidgetGeometry::new(generator, &info, &viewport).physical;
+
+        let correct = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result, correct);
+    }
+
+    #[test]
+    fn update() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+
+        let mut input = WidgetGeometry {
+            physical: WidgetPhysicalGeometry {
+                relative: WidgetBox {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+                absolute: WidgetBox {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+            },
+            generator,
+        };
+        input.update(&info, &viewport);
+
+        let result = input.physical;
+
+        let correct = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result, correct);
+    }
+}

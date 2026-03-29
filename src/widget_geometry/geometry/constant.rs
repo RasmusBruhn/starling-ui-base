@@ -120,14 +120,14 @@ mod tests {
 
         #[test]
         fn small() {
-            let generator = Constant::new_centered(&Point { x: 0.5, y: 0.5 });
+            let generator = Constant::new_centered(&Point { x: 0.5, y: 0.8 });
             let info = WidgetGeometryInfo::without_sibling(Point { x: 10.0, y: 20.0 });
 
             let result = generator.generate(&info);
 
             let correct = WidgetBox {
-                ll: Point { x: 0.25, y: 0.25 },
-                ur: Point { x: 0.75, y: 0.75 },
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
             };
 
             assert_eq!(result, correct);
