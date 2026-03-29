@@ -6,9 +6,11 @@
 //!
 
 mod primitives;
+mod viewport;
 mod widget_geometry;
 
 pub use primitives::{Coord, Point, WidgetBox};
+pub use viewport::WidgetViewport;
 pub use widget_geometry::{
     WidgetGeometry, WidgetGeometryGenerator, WidgetGeometryInfo, WidgetGeometryUpdateStatus,
     WidgetPhysicalGeometry, geometry,
