@@ -1,17 +1,16 @@
-use crate::Point;
-use num_traits::Float;
+use crate::{Coord, Point};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 /// An axis-aligned box in 2D-space
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct WidgetBox<T: Float> {
+pub struct WidgetBox<T: Coord> {
     /// The position of the lower left corner of the box
     pub ll: Point<T>,
     /// The position of the upper right corner of the box
     pub ur: Point<T>,
 }
 
-impl<T: Float> WidgetBox<T> {
+impl<T: Coord> WidgetBox<T> {
     /// Constructs a new box from its center and size
     ///
     /// # Parameters
@@ -41,7 +40,7 @@ impl<T: Float> WidgetBox<T> {
     }
 }
 
-impl<T: Float> Add<&Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Add<&Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn add(self, rhs: &Point<T>) -> Self::Output {
@@ -52,7 +51,7 @@ impl<T: Float> Add<&Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Add<Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Add<Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn add(self, rhs: Point<T>) -> Self::Output {
@@ -60,7 +59,7 @@ impl<T: Float> Add<Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Add<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> Add<&Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn add(self, rhs: &Point<T>) -> Self::Output {
@@ -68,7 +67,7 @@ impl<T: Float> Add<&Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Add<Point<T>> for WidgetBox<T> {
+impl<T: Coord> Add<Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn add(self, rhs: Point<T>) -> Self::Output {
@@ -76,20 +75,20 @@ impl<T: Float> Add<Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> AddAssign<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> AddAssign<&Point<T>> for WidgetBox<T> {
     fn add_assign(&mut self, rhs: &Point<T>) {
         self.ll += rhs;
         self.ur += rhs;
     }
 }
 
-impl<T: Float> AddAssign<Point<T>> for WidgetBox<T> {
+impl<T: Coord> AddAssign<Point<T>> for WidgetBox<T> {
     fn add_assign(&mut self, rhs: Point<T>) {
         *self += &rhs;
     }
 }
 
-impl<T: Float> Sub<&Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Sub<&Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn sub(self, rhs: &Point<T>) -> Self::Output {
@@ -100,7 +99,7 @@ impl<T: Float> Sub<&Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Sub<Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Sub<Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn sub(self, rhs: Point<T>) -> Self::Output {
@@ -108,7 +107,7 @@ impl<T: Float> Sub<Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Sub<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> Sub<&Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn sub(self, rhs: &Point<T>) -> Self::Output {
@@ -116,7 +115,7 @@ impl<T: Float> Sub<&Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Sub<Point<T>> for WidgetBox<T> {
+impl<T: Coord> Sub<Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn sub(self, rhs: Point<T>) -> Self::Output {
@@ -124,20 +123,20 @@ impl<T: Float> Sub<Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> SubAssign<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> SubAssign<&Point<T>> for WidgetBox<T> {
     fn sub_assign(&mut self, rhs: &Point<T>) {
         self.ll -= rhs;
         self.ur -= rhs;
     }
 }
 
-impl<T: Float> SubAssign<Point<T>> for WidgetBox<T> {
+impl<T: Coord> SubAssign<Point<T>> for WidgetBox<T> {
     fn sub_assign(&mut self, rhs: Point<T>) {
         *self -= &rhs;
     }
 }
 
-impl<T: Float> Mul<&Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Mul<&Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: &Point<T>) -> Self::Output {
@@ -148,7 +147,7 @@ impl<T: Float> Mul<&Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Mul<Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: Point<T>) -> Self::Output {
@@ -156,7 +155,7 @@ impl<T: Float> Mul<Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> Mul<&Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: &Point<T>) -> Self::Output {
@@ -164,7 +163,7 @@ impl<T: Float> Mul<&Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<Point<T>> for WidgetBox<T> {
+impl<T: Coord> Mul<Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: Point<T>) -> Self::Output {
@@ -172,20 +171,20 @@ impl<T: Float> Mul<Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> MulAssign<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> MulAssign<&Point<T>> for WidgetBox<T> {
     fn mul_assign(&mut self, rhs: &Point<T>) {
         self.ll *= rhs;
         self.ur *= rhs;
     }
 }
 
-impl<T: Float> MulAssign<Point<T>> for WidgetBox<T> {
+impl<T: Coord> MulAssign<Point<T>> for WidgetBox<T> {
     fn mul_assign(&mut self, rhs: Point<T>) {
         *self *= &rhs;
     }
 }
 
-impl<T: Float> Div<&Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Div<&Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: &Point<T>) -> Self::Output {
@@ -196,7 +195,7 @@ impl<T: Float> Div<&Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<Point<T>> for &WidgetBox<T> {
+impl<T: Coord> Div<Point<T>> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: Point<T>) -> Self::Output {
@@ -204,7 +203,7 @@ impl<T: Float> Div<Point<T>> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> Div<&Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: &Point<T>) -> Self::Output {
@@ -212,7 +211,7 @@ impl<T: Float> Div<&Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<Point<T>> for WidgetBox<T> {
+impl<T: Coord> Div<Point<T>> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: Point<T>) -> Self::Output {
@@ -220,20 +219,20 @@ impl<T: Float> Div<Point<T>> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> DivAssign<&Point<T>> for WidgetBox<T> {
+impl<T: Coord> DivAssign<&Point<T>> for WidgetBox<T> {
     fn div_assign(&mut self, rhs: &Point<T>) {
         self.ll /= rhs;
         self.ur /= rhs;
     }
 }
 
-impl<T: Float> DivAssign<Point<T>> for WidgetBox<T> {
+impl<T: Coord> DivAssign<Point<T>> for WidgetBox<T> {
     fn div_assign(&mut self, rhs: Point<T>) {
         *self /= &rhs;
     }
 }
 
-impl<T: Float> Mul<&T> for &WidgetBox<T> {
+impl<T: Coord> Mul<&T> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: &T) -> Self::Output {
@@ -244,7 +243,7 @@ impl<T: Float> Mul<&T> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<T> for &WidgetBox<T> {
+impl<T: Coord> Mul<T> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -252,7 +251,7 @@ impl<T: Float> Mul<T> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<&T> for WidgetBox<T> {
+impl<T: Coord> Mul<&T> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: &T) -> Self::Output {
@@ -260,7 +259,7 @@ impl<T: Float> Mul<&T> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Mul<T> for WidgetBox<T> {
+impl<T: Coord> Mul<T> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -268,20 +267,20 @@ impl<T: Float> Mul<T> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> MulAssign<&T> for WidgetBox<T> {
+impl<T: Coord> MulAssign<&T> for WidgetBox<T> {
     fn mul_assign(&mut self, rhs: &T) {
         self.ll *= rhs;
         self.ur *= rhs;
     }
 }
 
-impl<T: Float> MulAssign<T> for WidgetBox<T> {
+impl<T: Coord> MulAssign<T> for WidgetBox<T> {
     fn mul_assign(&mut self, rhs: T) {
         *self *= &rhs;
     }
 }
 
-impl<T: Float> Div<&T> for &WidgetBox<T> {
+impl<T: Coord> Div<&T> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: &T) -> Self::Output {
@@ -292,7 +291,7 @@ impl<T: Float> Div<&T> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<T> for &WidgetBox<T> {
+impl<T: Coord> Div<T> for &WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -300,7 +299,7 @@ impl<T: Float> Div<T> for &WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<&T> for WidgetBox<T> {
+impl<T: Coord> Div<&T> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: &T) -> Self::Output {
@@ -308,7 +307,7 @@ impl<T: Float> Div<&T> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> Div<T> for WidgetBox<T> {
+impl<T: Coord> Div<T> for WidgetBox<T> {
     type Output = WidgetBox<T>;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -316,14 +315,14 @@ impl<T: Float> Div<T> for WidgetBox<T> {
     }
 }
 
-impl<T: Float> DivAssign<&T> for WidgetBox<T> {
+impl<T: Coord> DivAssign<&T> for WidgetBox<T> {
     fn div_assign(&mut self, rhs: &T) {
         self.ll /= rhs;
         self.ur /= rhs;
     }
 }
 
-impl<T: Float> DivAssign<T> for WidgetBox<T> {
+impl<T: Coord> DivAssign<T> for WidgetBox<T> {
     fn div_assign(&mut self, rhs: T) {
         *self /= &rhs;
     }

@@ -1,16 +1,15 @@
-use crate::WidgetBox;
-use num_traits::Float;
+use crate::{Coord, WidgetBox};
 
 /// A description of the position and size of a widget
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct WidgetPhysicalGeometry<T: Float> {
+pub struct WidgetPhysicalGeometry<T: Coord> {
     /// The position and size of the widget relative to its parent viewport
     pub relative: WidgetBox<T>,
     /// The position and size of the widget relative to its root viewport
     pub absolute: WidgetBox<T>,
 }
 
-impl<T: Float> WidgetPhysicalGeometry<T> {
+impl<T: Coord> WidgetPhysicalGeometry<T> {
     /// Constructs a new physical widget geometry using the absolute geometry of
     /// its parent viewport
     ///

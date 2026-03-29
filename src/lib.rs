@@ -5,20 +5,18 @@
 //! with (0,0) at the upper left corner and (1,1) at the lower right corner
 //!
 
-use num_traits::Float;
-
-mod geometry;
 mod primitives;
+mod widget_geometry;
 
-pub use geometry::{
+pub use primitives::{Coord, Point, WidgetBox};
+pub use widget_geometry::{
     WidgetGeometry, WidgetGeometryGenerator, WidgetGeometryInfo, WidgetGeometryUpdateStatus,
-    WidgetPhysicalGeometry,
+    WidgetPhysicalGeometry, geometry,
 };
-pub use primitives::{Point, WidgetBox};
 
 /// A generic widget, the base of all elements in the ui
 #[derive(Debug)]
-pub struct Widget<T: Float> {
+pub struct Widget<T: Coord> {
     /// The description of the geometry of the widget
     geometry: WidgetGeometry<T>,
 }

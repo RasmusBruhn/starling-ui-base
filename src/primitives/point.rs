@@ -1,4 +1,4 @@
-use num_traits::Float;
+use crate::Coord;
 use std::{
     fmt::Debug,
     ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign},
@@ -6,21 +6,21 @@ use std::{
 
 /// A single point in 2D-space
 #[derive(Copy, Clone, Debug)]
-pub struct Point<T: Float> {
+pub struct Point<T: Coord> {
     /// The x-coordinate of the point
     pub x: T,
     /// The y-coordinate of the point
     pub y: T,
 }
 
-impl<T: Float> PartialEq for Point<T> {
+impl<T: Coord> PartialEq for Point<T> {
     fn eq(&self, other: &Self) -> bool {
         return (self.x - other.x) * (self.x - other.x) + (self.y - other.y) * (self.y * other.y)
             < T::epsilon();
     }
 }
 
-impl<T: Float> Neg for &Point<T> {
+impl<T: Coord> Neg for &Point<T> {
     type Output = Point<T>;
 
     fn neg(self) -> Self::Output {
@@ -31,7 +31,7 @@ impl<T: Float> Neg for &Point<T> {
     }
 }
 
-impl<T: Float> Neg for Point<T> {
+impl<T: Coord> Neg for Point<T> {
     type Output = Point<T>;
 
     fn neg(self) -> Self::Output {
@@ -39,7 +39,7 @@ impl<T: Float> Neg for Point<T> {
     }
 }
 
-impl<T: Float> Add for &Point<T> {
+impl<T: Coord> Add for &Point<T> {
     type Output = Point<T>;
 
     fn add(self, rhs: Self) -> Self::Output {
@@ -50,7 +50,7 @@ impl<T: Float> Add for &Point<T> {
     }
 }
 
-impl<T: Float> Add<Point<T>> for &Point<T> {
+impl<T: Coord> Add<Point<T>> for &Point<T> {
     type Output = Point<T>;
 
     fn add(self, rhs: Point<T>) -> Self::Output {
@@ -58,7 +58,7 @@ impl<T: Float> Add<Point<T>> for &Point<T> {
     }
 }
 
-impl<T: Float> Add<&Point<T>> for Point<T> {
+impl<T: Coord> Add<&Point<T>> for Point<T> {
     type Output = Point<T>;
 
     fn add(self, rhs: &Point<T>) -> Self::Output {
@@ -66,7 +66,7 @@ impl<T: Float> Add<&Point<T>> for Point<T> {
     }
 }
 
-impl<T: Float> Add for Point<T> {
+impl<T: Coord> Add for Point<T> {
     type Output = Point<T>;
 
     fn add(self, rhs: Point<T>) -> Self::Output {
@@ -74,20 +74,20 @@ impl<T: Float> Add for Point<T> {
     }
 }
 
-impl<T: Float> AddAssign<&Point<T>> for Point<T> {
+impl<T: Coord> AddAssign<&Point<T>> for Point<T> {
     fn add_assign(&mut self, rhs: &Point<T>) {
         self.x = self.x + rhs.x;
         self.y = self.y + rhs.y;
     }
 }
 
-impl<T: Float> AddAssign for Point<T> {
+impl<T: Coord> AddAssign for Point<T> {
     fn add_assign(&mut self, rhs: Self) {
         *self += &rhs;
     }
 }
 
-impl<T: Float> Sub for &Point<T> {
+impl<T: Coord> Sub for &Point<T> {
     type Output = Point<T>;
 
     fn sub(self, rhs: Self) -> Self::Output {
@@ -98,7 +98,7 @@ impl<T: Float> Sub for &Point<T> {
     }
 }
 
-impl<T: Float> Sub<Point<T>> for &Point<T> {
+impl<T: Coord> Sub<Point<T>> for &Point<T> {
     type Output = Point<T>;
 
     fn sub(self, rhs: Point<T>) -> Self::Output {
@@ -106,7 +106,7 @@ impl<T: Float> Sub<Point<T>> for &Point<T> {
     }
 }
 
-impl<T: Float> Sub<&Point<T>> for Point<T> {
+impl<T: Coord> Sub<&Point<T>> for Point<T> {
     type Output = Point<T>;
 
     fn sub(self, rhs: &Point<T>) -> Self::Output {
@@ -114,7 +114,7 @@ impl<T: Float> Sub<&Point<T>> for Point<T> {
     }
 }
 
-impl<T: Float> Sub for Point<T> {
+impl<T: Coord> Sub for Point<T> {
     type Output = Point<T>;
 
     fn sub(self, rhs: Point<T>) -> Self::Output {
@@ -122,20 +122,20 @@ impl<T: Float> Sub for Point<T> {
     }
 }
 
-impl<T: Float> SubAssign<&Point<T>> for Point<T> {
+impl<T: Coord> SubAssign<&Point<T>> for Point<T> {
     fn sub_assign(&mut self, rhs: &Point<T>) {
         self.x = self.x - rhs.x;
         self.y = self.y - rhs.y;
     }
 }
 
-impl<T: Float> SubAssign for Point<T> {
+impl<T: Coord> SubAssign for Point<T> {
     fn sub_assign(&mut self, rhs: Self) {
         *self -= &rhs;
     }
 }
 
-impl<T: Float> Mul for &Point<T> {
+impl<T: Coord> Mul for &Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: Self) -> Self::Output {
@@ -146,7 +146,7 @@ impl<T: Float> Mul for &Point<T> {
     }
 }
 
-impl<T: Float> Mul<Point<T>> for &Point<T> {
+impl<T: Coord> Mul<Point<T>> for &Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: Point<T>) -> Self::Output {
@@ -154,7 +154,7 @@ impl<T: Float> Mul<Point<T>> for &Point<T> {
     }
 }
 
-impl<T: Float> Mul<&Point<T>> for Point<T> {
+impl<T: Coord> Mul<&Point<T>> for Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: &Point<T>) -> Self::Output {
@@ -162,7 +162,7 @@ impl<T: Float> Mul<&Point<T>> for Point<T> {
     }
 }
 
-impl<T: Float> Mul for Point<T> {
+impl<T: Coord> Mul for Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: Point<T>) -> Self::Output {
@@ -170,20 +170,20 @@ impl<T: Float> Mul for Point<T> {
     }
 }
 
-impl<T: Float> MulAssign<&Point<T>> for Point<T> {
+impl<T: Coord> MulAssign<&Point<T>> for Point<T> {
     fn mul_assign(&mut self, rhs: &Point<T>) {
         self.x = self.x * rhs.x;
         self.y = self.y * rhs.y;
     }
 }
 
-impl<T: Float> MulAssign for Point<T> {
+impl<T: Coord> MulAssign for Point<T> {
     fn mul_assign(&mut self, rhs: Self) {
         *self *= &rhs;
     }
 }
 
-impl<T: Float> Div for &Point<T> {
+impl<T: Coord> Div for &Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: Self) -> Self::Output {
@@ -194,7 +194,7 @@ impl<T: Float> Div for &Point<T> {
     }
 }
 
-impl<T: Float> Div<Point<T>> for &Point<T> {
+impl<T: Coord> Div<Point<T>> for &Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: Point<T>) -> Self::Output {
@@ -202,7 +202,7 @@ impl<T: Float> Div<Point<T>> for &Point<T> {
     }
 }
 
-impl<T: Float> Div<&Point<T>> for Point<T> {
+impl<T: Coord> Div<&Point<T>> for Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: &Point<T>) -> Self::Output {
@@ -210,7 +210,7 @@ impl<T: Float> Div<&Point<T>> for Point<T> {
     }
 }
 
-impl<T: Float> Div for Point<T> {
+impl<T: Coord> Div for Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: Point<T>) -> Self::Output {
@@ -218,20 +218,20 @@ impl<T: Float> Div for Point<T> {
     }
 }
 
-impl<T: Float> DivAssign<&Point<T>> for Point<T> {
+impl<T: Coord> DivAssign<&Point<T>> for Point<T> {
     fn div_assign(&mut self, rhs: &Point<T>) {
         self.x = self.x / rhs.x;
         self.y = self.y / rhs.y;
     }
 }
 
-impl<T: Float> DivAssign for Point<T> {
+impl<T: Coord> DivAssign for Point<T> {
     fn div_assign(&mut self, rhs: Self) {
         *self /= &rhs;
     }
 }
 
-impl<T: Float> Mul<&T> for &Point<T> {
+impl<T: Coord> Mul<&T> for &Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: &T) -> Self::Output {
@@ -242,7 +242,7 @@ impl<T: Float> Mul<&T> for &Point<T> {
     }
 }
 
-impl<T: Float> Mul<T> for &Point<T> {
+impl<T: Coord> Mul<T> for &Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -250,7 +250,7 @@ impl<T: Float> Mul<T> for &Point<T> {
     }
 }
 
-impl<T: Float> Mul<&T> for Point<T> {
+impl<T: Coord> Mul<&T> for Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: &T) -> Self::Output {
@@ -258,7 +258,7 @@ impl<T: Float> Mul<&T> for Point<T> {
     }
 }
 
-impl<T: Float> Mul<T> for Point<T> {
+impl<T: Coord> Mul<T> for Point<T> {
     type Output = Point<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
@@ -266,20 +266,20 @@ impl<T: Float> Mul<T> for Point<T> {
     }
 }
 
-impl<T: Float> MulAssign<&T> for Point<T> {
+impl<T: Coord> MulAssign<&T> for Point<T> {
     fn mul_assign(&mut self, rhs: &T) {
         self.x = self.x * *rhs;
         self.y = self.y * *rhs;
     }
 }
 
-impl<T: Float> MulAssign<T> for Point<T> {
+impl<T: Coord> MulAssign<T> for Point<T> {
     fn mul_assign(&mut self, rhs: T) {
         *self *= &rhs;
     }
 }
 
-impl<T: Float> Div<&T> for &Point<T> {
+impl<T: Coord> Div<&T> for &Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: &T) -> Self::Output {
@@ -290,7 +290,7 @@ impl<T: Float> Div<&T> for &Point<T> {
     }
 }
 
-impl<T: Float> Div<T> for &Point<T> {
+impl<T: Coord> Div<T> for &Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -298,7 +298,7 @@ impl<T: Float> Div<T> for &Point<T> {
     }
 }
 
-impl<T: Float> Div<&T> for Point<T> {
+impl<T: Coord> Div<&T> for Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: &T) -> Self::Output {
@@ -306,7 +306,7 @@ impl<T: Float> Div<&T> for Point<T> {
     }
 }
 
-impl<T: Float> Div<T> for Point<T> {
+impl<T: Coord> Div<T> for Point<T> {
     type Output = Point<T>;
 
     fn div(self, rhs: T) -> Self::Output {
@@ -314,14 +314,14 @@ impl<T: Float> Div<T> for Point<T> {
     }
 }
 
-impl<T: Float> DivAssign<&T> for Point<T> {
+impl<T: Coord> DivAssign<&T> for Point<T> {
     fn div_assign(&mut self, rhs: &T) {
         self.x = self.x / *rhs;
         self.y = self.y / *rhs;
     }
 }
 
-impl<T: Float> DivAssign<T> for Point<T> {
+impl<T: Coord> DivAssign<T> for Point<T> {
     fn div_assign(&mut self, rhs: T) {
         *self /= &rhs;
     }

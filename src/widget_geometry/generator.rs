@@ -1,10 +1,9 @@
-use crate::{Point, WidgetBox};
-use num_traits::Float;
+use crate::{Coord, Point, WidgetBox};
 use std::{fmt::Debug, time::Instant};
 
 /// All information the genetator can use to construct the new geometry
 #[derive(Clone, Debug, PartialEq)]
-pub struct WidgetGeometryInfo<'a, T: Float> {
+pub struct WidgetGeometryInfo<'a, T: Coord> {
     /// The current time
     pub time: Instant,
     /// The size in absolute coordinates of the viewport this widget is inside
@@ -14,7 +13,7 @@ pub struct WidgetGeometryInfo<'a, T: Float> {
     pub sibling: Option<&'a WidgetBox<T>>,
 }
 
-impl<'a, T: Float> WidgetGeometryInfo<'a, T> {
+impl<'a, T: Coord> WidgetGeometryInfo<'a, T> {
     /// Constructs a new geometry info with a sibling
     ///
     /// # Parameters
@@ -51,7 +50,7 @@ impl<'a, T: Float> WidgetGeometryInfo<'a, T> {
 
 /// A trait for an object to be able to generate the physical geometry for a
 /// widget
-pub trait WidgetGeometryGenerator<T: Float>: Debug {
+pub trait WidgetGeometryGenerator<T: Coord>: Debug {
     /// Generates the new relative physical geometry of the widget
     ///
     /// # Parameters
