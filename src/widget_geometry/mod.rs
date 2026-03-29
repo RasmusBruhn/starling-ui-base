@@ -135,11 +135,15 @@ mod tests {
             },
             generator,
         };
-        input.update(&info, &viewport);
 
-        let result = input.physical;
+        let result1 = input.update(&info, &viewport);
+        let result2 = input.physical;
 
-        let correct = WidgetPhysicalGeometry {
+        let correct1 = WidgetGeometryUpdateStatus {
+            relative: true,
+            absolute: true,
+        };
+        let correct2 = WidgetPhysicalGeometry {
             relative: WidgetBox {
                 ll: Point { x: 0.25, y: 0.1 },
                 ur: Point { x: 0.75, y: 0.9 },
@@ -150,6 +154,142 @@ mod tests {
             },
         };
 
-        assert_eq!(result, correct);
+        assert_eq!(result1, correct1);
+        assert_eq!(result2, correct2);
+    }
+
+    #[test]
+    fn update_relative() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+
+        let mut input = WidgetGeometry {
+            physical: WidgetPhysicalGeometry {
+                relative: WidgetBox {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+                absolute: WidgetBox {
+                    ll: Point { x: 30.0, y: 6.0 },
+                    ur: Point { x: 40.0, y: 14.0 },
+                },
+            },
+            generator,
+        };
+
+        let result1 = input.update(&info, &viewport);
+        let result2 = input.physical;
+
+        let correct1 = WidgetGeometryUpdateStatus {
+            relative: true,
+            absolute: false,
+        };
+        let correct2 = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result1, correct1);
+        assert_eq!(result2, correct2);
+    }
+
+    #[test]
+    fn update_absolute() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+
+        let mut input = WidgetGeometry {
+            physical: WidgetPhysicalGeometry {
+                relative: WidgetBox {
+                    ll: Point { x: 0.25, y: 0.1 },
+                    ur: Point { x: 0.75, y: 0.9 },
+                },
+                absolute: WidgetBox {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+            },
+            generator,
+        };
+
+        let result1 = input.update(&info, &viewport);
+        let result2 = input.physical;
+
+        let correct1 = WidgetGeometryUpdateStatus {
+            relative: false,
+            absolute: true,
+        };
+        let correct2 = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result1, correct1);
+        assert_eq!(result2, correct2);
+    }
+
+    #[test]
+    fn update_none() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+
+        let mut input = WidgetGeometry {
+            physical: WidgetPhysicalGeometry {
+                relative: WidgetBox {
+                    ll: Point { x: 0.25, y: 0.1 },
+                    ur: Point { x: 0.75, y: 0.9 },
+                },
+                absolute: WidgetBox {
+                    ll: Point { x: 30.0, y: 6.0 },
+                    ur: Point { x: 40.0, y: 14.0 },
+                },
+            },
+            generator,
+        };
+
+        let result1 = input.update(&info, &viewport);
+        let result2 = input.physical;
+
+        let correct1 = WidgetGeometryUpdateStatus {
+            relative: false,
+            absolute: false,
+        };
+        let correct2 = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result1, correct1);
+        assert_eq!(result2, correct2);
     }
 }
