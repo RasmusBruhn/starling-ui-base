@@ -121,7 +121,6 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
-
         let mut input = WidgetGeometry {
             physical: WidgetPhysicalGeometry {
                 relative: WidgetBox {
@@ -166,7 +165,6 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
-
         let mut input = WidgetGeometry {
             physical: WidgetPhysicalGeometry {
                 relative: WidgetBox {
@@ -211,7 +209,6 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
-
         let mut input = WidgetGeometry {
             physical: WidgetPhysicalGeometry {
                 relative: WidgetBox {
@@ -256,7 +253,6 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
-
         let mut input = WidgetGeometry {
             physical: WidgetPhysicalGeometry {
                 relative: WidgetBox {
@@ -291,5 +287,31 @@ mod tests {
 
         assert_eq!(result1, correct1);
         assert_eq!(result2, correct2);
+    }
+
+    #[test]
+    fn get() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+        let geometry = WidgetGeometry::new(generator, &info, &viewport);
+
+        let result = geometry.get();
+
+        let correct = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result, &correct);
     }
 }

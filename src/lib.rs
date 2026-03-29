@@ -20,3 +20,60 @@ pub struct Widget<T: Coord> {
     /// The description of the geometry of the widget
     geometry: WidgetGeometry<T>,
 }
+
+impl<T: Coord> Widget<T> {
+    /// Constructs a new widget
+    ///
+    /// # Parameters
+    ///
+    /// geometry: The generator used to construct the geometry
+    ///
+    /// info: The info of parent and sibling widgets used to set the geometry
+    ///
+    /// viewport: The absolute coordinates of the viewport for this widget
+    pub fn new(
+        geometry: Box<dyn WidgetGeometryGenerator<T>>,
+        info: &WidgetGeometryInfo<T>,
+        viewport: &WidgetBox<T>,
+    ) -> Self {
+        let geometry = WidgetGeometry::new(geometry, info, viewport);
+
+        return Self { geometry };
+    }
+
+    /// Retrieves the current geometry of the widget
+    pub fn get_geometry(&self) -> &WidgetPhysicalGeometry<T> {
+        return self.geometry.get();
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_geometry() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = WidgetBox {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = WidgetGeometryInfo::without_sibling(viewport.get_size());
+        let widget = Widget::new(generator, &info, &viewport);
+
+        let result = widget.get_geometry();
+
+        let correct = WidgetPhysicalGeometry {
+            relative: WidgetBox {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: WidgetBox {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result, &correct);
+    }
+}
