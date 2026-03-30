@@ -25,16 +25,16 @@ impl<T: Coord> Viewport<T> {
     ///
     /// # Parameter
     ///
-    /// manager: The manager for the viewport
-    ///
     /// builder: The builder for the viewport
+    ///
+    /// manager: The manager for the viewport
     ///
     /// info: The info for building the geometry
     ///
     /// parent: The absolute coordinates of the parent widget geometry
     pub fn new(
-        manager: Box<dyn ViewportManager<T>>,
         builder: Box<dyn ViewportBuilder<T>>,
+        manager: Box<dyn ViewportManager<T>>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
     ) -> Self {

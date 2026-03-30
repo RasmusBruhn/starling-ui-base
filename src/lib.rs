@@ -10,7 +10,7 @@ mod viewport;
 mod widget_geometry;
 
 pub use primitives::{Coord, Point, Rect};
-pub use viewport::{Viewport, ViewportBuilder, ViewportManager};
+pub use viewport::{Viewport, ViewportBuilder, ViewportManager, ViewportList};
 pub use widget_geometry::{
     Geometry, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, PhysicalGeometry, geometry,
 };
