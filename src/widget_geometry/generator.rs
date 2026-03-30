@@ -52,17 +52,15 @@ impl<'a, T: Coord> GeometryInfo<'a, T> {
     /// # Parameters
     ///
     /// sibling: The relative coordinates of the new sibling
-    pub fn new_sibling(&self, sibling: &'a Rect<T>) -> Self {
-        let mut info = self.clone();
-        info.sibling = Some(sibling);
-        return info;
+    pub fn new_sibling(mut self, sibling: &'a Rect<T>) -> Self {
+        self.sibling = Some(sibling);
+        return self;
     }
 
     /// Constructs a copy of the geometry info without the sibling
-    pub fn remove_sibling(&self) -> Self {
-        let mut info = self.clone();
-        info.sibling = None;
-        return info;
+    pub fn remove_sibling(mut self) -> Self {
+        self.sibling = None;
+        return self;
     }
 
     /// Constructs a copy of the geometry with a new viewport size
@@ -70,10 +68,9 @@ impl<'a, T: Coord> GeometryInfo<'a, T> {
     /// # Parameters
     ///
     /// viewport_size: The size in absolute coordinates of the new viewport
-    pub fn new_viewport(&self, viewport_size: Point<T>) -> Self {
-        let mut info = self.clone();
-        info.viewport_size = viewport_size;
-        return info;
+    pub fn new_viewport(mut self, viewport_size: Point<T>) -> Self {
+        self.viewport_size = viewport_size;
+        return self;
     }
 }
 
@@ -137,13 +134,13 @@ mod tests {
         let viewport_size = Point { x: 20.0, y: 10.0 };
         let info = GeometryInfo::without_sibling(viewport_size);
 
-        let result = info.new_sibling(&sibling);
-
         let correct = GeometryInfo {
             time: info.time,
             viewport_size,
             sibling: Some(&sibling),
         };
+
+        let result = info.new_sibling(&sibling);
 
         assert_eq!(result, correct);
     }
@@ -157,13 +154,13 @@ mod tests {
         let viewport_size = Point { x: 20.0, y: 10.0 };
         let info = GeometryInfo::with_sibling(viewport_size, &sibling);
 
-        let result = info.remove_sibling();
-
         let correct = GeometryInfo {
             time: info.time,
             viewport_size,
             sibling: None,
         };
+
+        let result = info.remove_sibling();
 
         assert_eq!(result, correct);
     }
@@ -177,13 +174,13 @@ mod tests {
         let viewport_size = Point { x: 20.0, y: 10.0 };
         let info = GeometryInfo::with_sibling(Point { x: 0.0, y: 0.0 }, &sibling);
 
-        let result = info.new_viewport(viewport_size);
-
         let correct = GeometryInfo {
             time: info.time,
             viewport_size,
             sibling: Some(&sibling),
         };
+
+        let result = info.new_viewport(viewport_size);
 
         assert_eq!(result, correct);
     }
