@@ -6,11 +6,11 @@ mod viewport;
 
 pub use builder::ViewportBuilder;
 pub use manager::ViewportManager;
-pub use viewport::Viewport;
+use viewport::Viewport;
 
 /// A list of all viewports in a widget
 #[derive(Debug)]
-pub struct ViewportList<T: Coord> {
+pub(crate) struct ViewportList<T: Coord> {
     /// The list of the viewports
     viewports: Vec<Viewport<T>>,
 }
@@ -26,7 +26,7 @@ impl<T: Coord> ViewportList<T> {
     /// guarenteed to be None
     ///
     /// parent: The absolute coordinates of the parent geometry
-    pub fn new(
+    pub(crate) fn new(
         data: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn ViewportManager<T>>)>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,

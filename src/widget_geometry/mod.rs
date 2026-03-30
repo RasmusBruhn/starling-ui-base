@@ -39,7 +39,7 @@ impl<T: Coord> Geometry<T> {
     /// info: The info of parent and sibling widgets used to set the geometry
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
-    pub fn new(
+    pub(crate) fn new(
         generator: Box<dyn GeometryGenerator<T>>,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
@@ -60,7 +60,7 @@ impl<T: Coord> Geometry<T> {
     /// info: The info of parent and sibling widgets used to update the geometry
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
-    pub fn update(
+    pub(crate) fn update(
         &mut self,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,

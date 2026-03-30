@@ -9,7 +9,7 @@ use std::{
 
 /// A rectangular region inside a widget which can hold other widgets
 #[derive(Debug)]
-pub struct Viewport<T: Coord> {
+pub(super) struct Viewport<T: Coord> {
     /// The geometry of this viewport
     geometry: PhysicalGeometry<T>,
     /// All widgets inside this viewport
@@ -32,7 +32,7 @@ impl<T: Coord> Viewport<T> {
     /// info: The info for building the geometry
     ///
     /// parent: The absolute coordinates of the parent widget geometry
-    pub fn new(
+    pub(super) fn new(
         builder: Box<dyn ViewportBuilder<T>>,
         manager: Box<dyn ViewportManager<T>>,
         info: &GeometryInfo<T>,
@@ -68,7 +68,7 @@ impl<T: Coord> Viewport<T> {
     /// info: The info for rebuilding the size, the sibling is guarenteed to be None
     ///
     /// parent: The absolute coordinates of the parent widget geometry
-    pub fn update(
+    pub(super) fn update(
         new_geometry: bool,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
