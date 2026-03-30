@@ -14,9 +14,9 @@ use crate::Rect;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct GeometryUpdateStatus {
     /// True if the relative WidgetBox of the widget changed
-    relative: bool,
+    pub relative: bool,
     /// True if the size of the absolute WidgetBox of the widget changed
-    absolute: bool,
+    pub absolute: bool,
 }
 
 /// A description of the position and size of a widget and how to generate the
