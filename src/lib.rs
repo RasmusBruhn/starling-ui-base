@@ -39,7 +39,7 @@ impl<T: Coord> Widget<T> {
     /// viewport: The absolute coordinates of the viewport for this widget
     pub fn new(
         geometry: Box<dyn GeometryGenerator<T>>,
-        viewports: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn ViewportManager<T>>)>,
+        viewports: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)>,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
     ) -> Self {

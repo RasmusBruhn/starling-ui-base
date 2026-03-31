@@ -36,8 +36,10 @@ impl<T: Coord> Viewport<T> {
         let geometry = Geometry::new(generator, info, parent);
         let widgets = builder
             .build(
-                &info.clone().new_viewport(geometry.absolute.get_size()),
-                &geometry.absolute,
+                &info
+                    .clone()
+                    .new_viewport(geometry.get().absolute.get_size()),
+                &geometry.get().absolute,
             )
             .into_iter()
             .map(|widget| Rc::new(RefCell::new(widget)))
@@ -71,11 +73,13 @@ impl<T: Coord> Viewport<T> {
 
         // Update children
         let mut last_changed = false;
-        let mut info = info.clone().new_viewport(self.geometry.absolute.get_size());
+        let mut info = info
+            .clone()
+            .new_viewport(self.geometry.get().absolute.get_size());
         for mut widget in self.widgets.iter().map(|widget| widget.borrow_mut()) {
             // Only update if it is scheduled or something external has changed
             if last_changed || status.absolute {
-                let widget_status = widget.update(&info, &self.geometry.absolute, true);
+                let widget_status = widget.update(&info, &self.geometry.get().absolute, true);
                 status.internal |= widget_status.any();
                 last_changed = status.relative;
             }
