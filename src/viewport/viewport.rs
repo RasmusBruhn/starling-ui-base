@@ -2,7 +2,10 @@ use crate::{
     Coord, Geometry, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, PhysicalGeometry, Rect,
     ViewportBuilder, Widget,
 };
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::{Ref, RefCell},
+    rc::Rc,
+};
 
 /// A rectangular region inside a widget which can hold other widgets
 #[derive(Debug)]
@@ -27,7 +30,7 @@ impl<T: Coord> Viewport<T> {
     /// info: The info for building the geometry, sibling is guarenteed to be None
     ///
     /// parent: The absolute coordinates of the parent widget geometry
-    pub(super) fn new(
+    pub fn new(
         builder: Box<dyn ViewportBuilder<T>>,
         generator: Box<dyn GeometryGenerator<T>>,
         info: &GeometryInfo<T>,
@@ -63,7 +66,7 @@ impl<T: Coord> Viewport<T> {
     ///
     /// force: If true then it forces the viewport to update, otherwise only
     /// updates if it is scheduled
-    pub(super) fn update(
+    pub fn update(
         &mut self,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
@@ -89,6 +92,16 @@ impl<T: Coord> Viewport<T> {
         }
 
         return status;
+    }
+
+    /// Retrieves the geometry of the viewport
+    pub fn get_geometry(&self) -> &PhysicalGeometry<T> {
+        return self.geometry.get();
+    }
+
+    /// Retrieves an iterator over all widgets in the viewport
+    pub fn iter(&self) -> impl Iterator<Item = Ref<'_, Widget<T>>> {
+        return self.widgets.iter().map(|widget| widget.borrow());
     }
 }
 

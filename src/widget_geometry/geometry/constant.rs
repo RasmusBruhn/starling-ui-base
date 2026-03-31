@@ -1,4 +1,4 @@
-use crate::{Coord, Point, Rect, GeometryGenerator};
+use crate::{Coord, GeometryGenerator, Point, Rect};
 
 /// A constant widget geometry which always has the same geometry, useful for
 /// copying the viewport geometry
@@ -11,8 +11,8 @@ pub struct Constant<T: Coord> {
 impl<T: Coord> Constant<T> {
     /// Constructs a new constant widget geometry which copies the viewport
     /// geometry
-    pub fn new_full() -> Self {
-        return Self {
+    pub fn new_full() -> Box<Self> {
+        return Box::new(Self {
             geometry: Rect {
                 ll: Point {
                     x: T::from(0.0).unwrap(),
@@ -23,7 +23,7 @@ impl<T: Coord> Constant<T> {
                     y: T::from(1.0).unwrap(),
                 },
             },
-        };
+        });
     }
 
     /// Constructs a new constant widget geometry centered in its viewport
@@ -31,7 +31,7 @@ impl<T: Coord> Constant<T> {
     /// # Parameters
     ///
     /// size: The size of the widget
-    pub fn new_centered(size: &Point<T>) -> Self {
+    pub fn new_centered(size: &Point<T>) -> Box<Self> {
         let ll = (Point {
             x: T::from(1.0).unwrap(),
             y: T::from(1.0).unwrap(),
@@ -39,9 +39,9 @@ impl<T: Coord> Constant<T> {
             * T::from(0.5).unwrap();
         let ur = ll + size;
 
-        return Self {
+        return Box::new(Self {
             geometry: Rect { ll, ur },
-        };
+        });
     }
 }
 
@@ -66,7 +66,7 @@ mod tests {
             },
         };
 
-        assert_eq!(result, correct);
+        assert_eq!(*result, correct);
     }
 
     #[test]
@@ -94,9 +94,9 @@ mod tests {
             },
         };
 
-        assert_eq!(result1, correct1);
-        assert_eq!(result2, correct2);
-        assert_eq!(result3, correct3);
+        assert_eq!(*result1, correct1);
+        assert_eq!(*result2, correct2);
+        assert_eq!(*result3, correct3);
     }
 
     mod generator {

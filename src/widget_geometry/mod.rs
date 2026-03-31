@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn new() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -120,7 +120,7 @@ mod tests {
 
     #[test]
     fn update() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -165,7 +165,7 @@ mod tests {
 
     #[test]
     fn update_relative() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -210,7 +210,7 @@ mod tests {
 
     #[test]
     fn update_absolute() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -255,7 +255,7 @@ mod tests {
 
     #[test]
     fn update_none() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -300,7 +300,7 @@ mod tests {
 
     #[test]
     fn update_no_force() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },
@@ -345,7 +345,7 @@ mod tests {
 
     #[test]
     fn get() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },

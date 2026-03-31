@@ -10,8 +10,8 @@ mod viewport;
 mod widget_geometry;
 
 pub use primitives::{Coord, Point, Rect};
-pub use viewport::ViewportBuilder;
 use viewport::ViewportList;
+pub use viewport::{ViewportBuilder, builder};
 pub use widget_geometry::{
     Geometry, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, PhysicalGeometry, geometry,
 };
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn get_geometry() {
-        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
         let viewport = Rect {
             ll: Point { x: 25.0, y: 5.0 },
             ur: Point { x: 45.0, y: 15.0 },

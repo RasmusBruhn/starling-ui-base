@@ -1,9 +1,10 @@
 use crate::{Coord, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, Rect};
 
-mod builder;
+pub mod builder;
+mod builder_trait;
 mod viewport;
 
-pub use builder::ViewportBuilder;
+pub use builder_trait::ViewportBuilder;
 use viewport::Viewport;
 
 /// A list of all viewports in a widget
