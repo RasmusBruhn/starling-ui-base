@@ -38,6 +38,15 @@ impl<T: Coord> Rect<T> {
 
         return size;
     }
+
+    /// Constructs a new test rect equal to ((0, 0), (0, 0))
+    #[cfg(test)]
+    pub(crate) fn new_test() -> Self {
+        return Self {
+            ll: Point::new_test(),
+            ur: Point::new_test(),
+        };
+    }
 }
 
 impl<T: Coord> Add<&Point<T>> for &Rect<T> {

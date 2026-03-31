@@ -87,6 +87,20 @@ impl<T: Coord> Geometry<T> {
     pub fn get(&self) -> &PhysicalGeometry<T> {
         return &self.physical;
     }
+
+    /// Constructs a new uninitialized test geometry with a test physical
+    /// geometry where all rects are set to ((0, 0), (0, 0))
+    ///
+    /// # Parameters
+    ///
+    /// generator: The generator used to construct the physical geometry
+    #[cfg(test)]
+    pub(crate) fn new_test(generator: GeometryGenerator<T>) -> Self {
+        return Self {
+            physical: PhysicalGeometry::new_test(),
+            generator,
+        };
+    }
 }
 
 #[cfg(test)]

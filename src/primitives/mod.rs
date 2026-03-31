@@ -1,7 +1,7 @@
 mod coord;
 mod point;
-mod widget_box;
+mod rect;
 
 pub use coord::Coord;
 pub use point::Point;
-pub use widget_box::Rect;
+pub use rect::Rect;

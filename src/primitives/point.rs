@@ -13,6 +13,17 @@ pub struct Point<T: Coord> {
     pub y: T,
 }
 
+impl<T: Coord> Point<T> {
+    /// Constructs a new point equal to (0, 0)
+    #[cfg(test)]
+    pub(crate) fn new_test() -> Self {
+        return Self {
+            x: T::from(0.0).unwrap(),
+            y: T::from(0.0).unwrap(),
+        };
+    }
+}
+
 impl<T: Coord> PartialEq for Point<T> {
     fn eq(&self, other: &Self) -> bool {
         return (self.x - other.x) * (self.x - other.x) + (self.y - other.y) * (self.y * other.y)

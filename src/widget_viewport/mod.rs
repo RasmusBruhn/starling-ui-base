@@ -1,3 +1,5 @@
+#[cfg(test)]
+use crate::Widget;
 use crate::{Coord, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, Rect};
 
 mod builder;
@@ -22,18 +24,18 @@ impl<T: Coord> ViewportList<T> {
     ///
     /// # Parameters
     ///
-    /// data: The builders and managers for all the viewports to construct
+    /// viewports: The builders and managers for all the viewports to construct
     ///
     /// info: The info for building for viewport geometries, sibling is
     /// guarenteed to be None
     ///
     /// parent: The absolute coordinates of the parent geometry
     pub(crate) fn new(
-        data: ViewportConstructor<T>,
+        viewports: ViewportConstructor<T>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
     ) -> Self {
-        let viewports = data
+        let viewports = viewports
             .into_iter()
             .map(|(builder, manager)| Viewport::new(builder, manager, info, parent))
             .collect::<Vec<_>>();
@@ -67,5 +69,23 @@ impl<T: Coord> ViewportList<T> {
                 };
             })
             .fold(GeometryUpdateStatus::new(false), |a, b| a | b);
+    }
+
+    /// Constructs a new test viewport list with all geometries uninitialized to
+    /// ((0, 0), (0, 0))
+    ///
+    /// # Parameters
+    ///
+    /// viewports: The builders, managers and widgets for all the viewports
+    #[cfg(test)]
+    pub(crate) fn new_test(
+        viewports: Vec<(ViewportBuilder<T>, GeometryGenerator<T>, Vec<Widget<T>>)>,
+    ) -> Self {
+        let viewports = viewports
+            .into_iter()
+            .map(|(builder, generator, widgets)| Viewport::new_test(builder, generator, widgets))
+            .collect::<Vec<_>>();
+
+        return Self { viewports };
     }
 }

@@ -67,12 +67,41 @@ impl<T: Coord> Widget<T> {
         parent: &Rect<T>,
         force: bool,
     ) -> GeometryUpdateStatus {
-        todo!()
+        let mut status = self.geometry.update(info, parent, force);
+
+        // Update viewports if size has changed
+        if status.absolute {
+            status.internal |= self.viewports.update(info, parent, status.absolute).any();
+        }
+
+        return status;
     }
 
     /// Retrieves the current geometry of the widget
     pub fn get_geometry(&self) -> &PhysicalGeometry<T> {
         return self.geometry.get();
+    }
+
+    /// Constructs a new test widget with all geometries uninitialized to ((0,
+    /// 0), (0, 0))
+    ///
+    /// # Parameters
+    ///
+    /// geometry: The generator used to construct the geometry
+    ///
+    /// viewports: The builders, managers, and widgets for all the viewports
+    #[cfg(test)]
+    pub(crate) fn new_test(
+        geometry: GeometryGenerator<T>,
+        viewports: Vec<(ViewportBuilder<T>, GeometryGenerator<T>, Vec<Widget<T>>)>,
+    ) -> Self {
+        let geometry = Geometry::new_test(geometry);
+        let viewports = ViewportList::new_test(viewports);
+
+        return Self {
+            geometry,
+            viewports,
+        };
     }
 }
 

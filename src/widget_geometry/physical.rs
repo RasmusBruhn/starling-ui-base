@@ -23,6 +23,16 @@ impl<T: Coord> PhysicalGeometry<T> {
 
         return Self { relative, absolute };
     }
+
+    /// Constructs a new test physical geometry with all rects set to ((0, 0),
+    /// (0, 0))
+    #[cfg(test)]
+    pub(crate) fn new_test() -> Self {
+        return Self {
+            relative: Rect::new_test(),
+            absolute: Rect::new_test(),
+        };
+    }
 }
 
 #[cfg(test)]
