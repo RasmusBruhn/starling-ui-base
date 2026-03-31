@@ -1,11 +1,9 @@
-use crate::{Coord, GeometryInfo, Rect};
+use crate::{Coord, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, Rect};
 
 mod builder;
-mod manager;
 mod viewport;
 
 pub use builder::ViewportBuilder;
-pub use manager::ViewportManager;
 use viewport::Viewport;
 
 /// A list of all viewports in a widget
@@ -27,7 +25,7 @@ impl<T: Coord> ViewportList<T> {
     ///
     /// parent: The absolute coordinates of the parent geometry
     pub(crate) fn new(
-        data: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn ViewportManager<T>>)>,
+        data: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
     ) -> Self {
@@ -37,5 +35,33 @@ impl<T: Coord> ViewportList<T> {
             .collect::<Vec<_>>();
 
         return Self { viewports };
+    }
+
+    /// Updates all viewports of the widget
+    ///
+    /// # Parameters
+    ///
+    /// info: The info for updating the geometry, sibling is guarenteed to be None
+    ///
+    /// parent: The absolute coordinates of the parent widget geometry
+    ///
+    /// force: If true, force update all viewports, otherwise only update if scheduled
+    pub(crate) fn update(
+        &mut self,
+        info: &GeometryInfo<T>,
+        parent: &Rect<T>,
+        force: bool,
+    ) -> GeometryUpdateStatus {
+        return self
+            .viewports
+            .iter_mut()
+            .map(|viewport| {
+                return if force {
+                    viewport.update(info, parent, force)
+                } else {
+                    GeometryUpdateStatus::new(false)
+                };
+            })
+            .fold(GeometryUpdateStatus::new(false), |a, b| a | b);
     }
 }

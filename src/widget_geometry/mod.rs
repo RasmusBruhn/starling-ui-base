@@ -3,21 +3,13 @@ use crate::Coord;
 mod generator;
 pub mod geometry;
 mod physical;
+mod update_info;
 
 pub use generator::{GeometryGenerator, GeometryInfo};
 pub use physical::PhysicalGeometry;
+pub use update_info::GeometryUpdateStatus;
 
 use crate::Rect;
-
-/// Status when updating the widget coordinates to check if something was
-/// changed
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct GeometryUpdateStatus {
-    /// True if the relative WidgetBox of the widget changed
-    pub relative: bool,
-    /// True if the size of the absolute WidgetBox of the widget changed
-    pub absolute: bool,
-}
 
 /// A description of the position and size of a widget and how to generate the
 /// layout
@@ -60,20 +52,33 @@ impl<T: Coord> Geometry<T> {
     /// info: The info of parent and sibling widgets used to update the geometry
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
+    ///
+    /// force: If true then force update the geometry, otherwise only update if
+    /// scheduled
     pub(crate) fn update(
         &mut self,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
+        force: bool,
     ) -> GeometryUpdateStatus {
-        let pre_absolute_size = self.physical.absolute.get_size();
-        let pre_relative = self.physical.relative;
+        return if force {
+            let pre_absolute_size = self.physical.absolute.get_size();
+            let pre_relative = self.physical.relative;
 
-        let relative = self.generator.generate(info);
-        self.physical = PhysicalGeometry::from_parent(relative, viewport);
+            let relative = self.generator.generate(info);
+            self.physical = PhysicalGeometry::from_parent(relative, viewport);
 
-        return GeometryUpdateStatus {
-            relative: relative != pre_relative,
-            absolute: self.physical.absolute.get_size() != pre_absolute_size,
+            GeometryUpdateStatus {
+                relative: relative != pre_relative,
+                absolute: self.physical.absolute.get_size() != pre_absolute_size,
+                internal: false,
+            }
+        } else {
+            GeometryUpdateStatus {
+                relative: false,
+                absolute: false,
+                internal: false,
+            }
         };
     }
 
@@ -135,12 +140,13 @@ mod tests {
             generator,
         };
 
-        let result1 = input.update(&info, &viewport);
+        let result1 = input.update(&info, &viewport, true);
         let result2 = input.physical;
 
         let correct1 = GeometryUpdateStatus {
             relative: true,
             absolute: true,
+            internal: false,
         };
         let correct2 = PhysicalGeometry {
             relative: Rect {
@@ -179,12 +185,13 @@ mod tests {
             generator,
         };
 
-        let result1 = input.update(&info, &viewport);
+        let result1 = input.update(&info, &viewport, true);
         let result2 = input.physical;
 
         let correct1 = GeometryUpdateStatus {
             relative: true,
             absolute: false,
+            internal: false,
         };
         let correct2 = PhysicalGeometry {
             relative: Rect {
@@ -223,12 +230,13 @@ mod tests {
             generator,
         };
 
-        let result1 = input.update(&info, &viewport);
+        let result1 = input.update(&info, &viewport, true);
         let result2 = input.physical;
 
         let correct1 = GeometryUpdateStatus {
             relative: false,
             absolute: true,
+            internal: false,
         };
         let correct2 = PhysicalGeometry {
             relative: Rect {
@@ -267,12 +275,13 @@ mod tests {
             generator,
         };
 
-        let result1 = input.update(&info, &viewport);
+        let result1 = input.update(&info, &viewport, true);
         let result2 = input.physical;
 
         let correct1 = GeometryUpdateStatus {
             relative: false,
             absolute: false,
+            internal: false,
         };
         let correct2 = PhysicalGeometry {
             relative: Rect {
@@ -282,6 +291,51 @@ mod tests {
             absolute: Rect {
                 ll: Point { x: 30.0, y: 6.0 },
                 ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+
+        assert_eq!(result1, correct1);
+        assert_eq!(result2, correct2);
+    }
+
+    #[test]
+    fn update_no_force() {
+        let generator = Box::new(geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 }));
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let mut input = Geometry {
+            physical: PhysicalGeometry {
+                relative: Rect {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+                absolute: Rect {
+                    ll: Point { x: 0.0, y: 0.0 },
+                    ur: Point { x: 0.0, y: 0.0 },
+                },
+            },
+            generator,
+        };
+
+        let result1 = input.update(&info, &viewport, false);
+        let result2 = input.physical;
+
+        let correct1 = GeometryUpdateStatus {
+            relative: false,
+            absolute: false,
+            internal: false,
+        };
+        let correct2 = PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.0, y: 0.0 },
+                ur: Point { x: 0.0, y: 0.0 },
+            },
+            absolute: Rect {
+                ll: Point { x: 0.0, y: 0.0 },
+                ur: Point { x: 0.0, y: 0.0 },
             },
         };
 

@@ -10,8 +10,8 @@ mod viewport;
 mod widget_geometry;
 
 pub use primitives::{Coord, Point, Rect};
+pub use viewport::ViewportBuilder;
 use viewport::ViewportList;
-pub use viewport::{ViewportBuilder, ViewportManager};
 pub use widget_geometry::{
     Geometry, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, PhysicalGeometry, geometry,
 };
@@ -57,6 +57,16 @@ impl<T: Coord> Widget<T> {
             geometry,
             viewports,
         };
+    }
+
+    ///
+    pub(crate) fn update(
+        &mut self,
+        info: &GeometryInfo<T>,
+        parent: &Rect<T>,
+        force: bool,
+    ) -> GeometryUpdateStatus {
+        todo!()
     }
 
     /// Retrieves the current geometry of the widget
