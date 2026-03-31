@@ -2,9 +2,9 @@ use crate::{Coord, GeometryGenerator, ViewportBuilder, geometry};
 
 /// Constructs a single viewport constructor for a widget where the viewport
 /// fills the entire widget
-/// 
+///
 /// # Parameters
-/// 
+///
 /// builder: The widget builder for populating the viewport
 pub fn single<T: Coord>(
     builder: Box<dyn ViewportBuilder<T>>,
@@ -16,9 +16,8 @@ pub fn single<T: Coord>(
 
 #[cfg(test)]
 mod tests {
-    use crate::{GeometryInfo, PhysicalGeometry, Point, Rect, Widget};
-
     use super::*;
+    use crate::{GeometryInfo, PhysicalGeometry, Point, Rect, Widget};
 
     #[derive(Debug)]
     struct TestBuilder {}
