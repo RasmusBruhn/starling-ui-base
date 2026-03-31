@@ -1,25 +1,21 @@
-use crate::{Coord, GeometryGenerator, ViewportBuilder};
+use crate::{Coord, ViewportConstructor};
 
-/// Constructs a empty viewport constructor for a widget for widgets with no
+/// Constructs a empty viewport geometry for a widget for widgets with no
 /// children
-pub fn none<T: Coord>() -> Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)> {
+pub fn none<T: Coord>() -> ViewportConstructor<T> {
     return Vec::new();
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{GeometryInfo, PhysicalGeometry, Point, Rect, Widget, geometry};
+    use crate::{GeometryInfo, Point, Rect, Widget, geometry};
 
     #[test]
     fn construct() {
         let viewport = Rect {
             ll: Point { x: 15.0, y: 30.0 },
             ur: Point { x: 35.0, y: 40.0 },
-        };
-        let viewport_inner = Rect {
-            ll: Point { x: 17.0, y: 32.0 },
-            ur: Point { x: 33.0, y: 38.0 },
         };
         let viewports = none();
         let geometry = geometry::Constant::new_centered(&Point { x: 0.8, y: 0.6 });

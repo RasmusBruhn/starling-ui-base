@@ -1,4 +1,4 @@
-use crate::{Coord, GeometryGenerator, Point, Rect};
+use crate::{Coord, GeometryGeneratorTrait, Point, Rect};
 
 /// A constant widget geometry which always has the same geometry, useful for
 /// copying the viewport geometry
@@ -45,7 +45,7 @@ impl<T: Coord> Constant<T> {
     }
 }
 
-impl<T: Coord> GeometryGenerator<T> for Constant<T> {
+impl<T: Coord> GeometryGeneratorTrait<T> for Constant<T> {
     fn generate(&self, _info: &crate::GeometryInfo<T>) -> Rect<T> {
         return self.geometry;
     }

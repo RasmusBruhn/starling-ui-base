@@ -1,11 +1,14 @@
 use crate::{Coord, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, Rect};
 
-pub mod builder;
-mod builder_trait;
-mod viewport;
+mod builder;
+pub mod constructor;
+mod viewport_object;
 
-pub use builder_trait::ViewportBuilder;
-use viewport::Viewport;
+pub use builder::{ViewportBuilder, ViewportBuilderTrait};
+pub use constructor as viewport;
+use viewport_object::Viewport;
+
+pub type ViewportConstructor<T> = Vec<(ViewportBuilder<T>, GeometryGenerator<T>)>;
 
 /// A list of all viewports in a widget
 #[derive(Debug)]
@@ -26,7 +29,7 @@ impl<T: Coord> ViewportList<T> {
     ///
     /// parent: The absolute coordinates of the parent geometry
     pub(crate) fn new(
-        data: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)>,
+        data: ViewportConstructor<T>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
     ) -> Self {

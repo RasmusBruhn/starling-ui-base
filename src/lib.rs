@@ -6,15 +6,16 @@
 //!
 
 mod primitives;
-mod viewport;
 mod widget_geometry;
+mod widget_viewport;
 
 pub use primitives::{Coord, Point, Rect};
-use viewport::ViewportList;
-pub use viewport::{ViewportBuilder, builder};
 pub use widget_geometry::{
-    Geometry, GeometryGenerator, GeometryInfo, GeometryUpdateStatus, PhysicalGeometry, geometry,
+    Geometry, GeometryGenerator, GeometryGeneratorTrait, GeometryInfo, GeometryUpdateStatus,
+    PhysicalGeometry, geometry,
 };
+use widget_viewport::ViewportList;
+pub use widget_viewport::{ViewportBuilder, ViewportBuilderTrait, ViewportConstructor, viewport};
 
 /// A generic widget, the base of all elements in the ui
 #[derive(Debug)]
@@ -38,8 +39,8 @@ impl<T: Coord> Widget<T> {
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
     pub fn new(
-        geometry: Box<dyn GeometryGenerator<T>>,
-        viewports: Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)>,
+        geometry: GeometryGenerator<T>,
+        viewports: ViewportConstructor<T>,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
     ) -> Self {

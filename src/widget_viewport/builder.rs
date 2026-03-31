@@ -1,7 +1,7 @@
 use crate::{Coord, GeometryInfo, Rect, Widget};
 use std::fmt::Debug;
 
-pub trait ViewportBuilder<T: Coord>: Debug {
+pub trait ViewportBuilderTrait<T: Coord>: Debug {
     /// Builds all the widgets for a viewport
     ///
     /// # Parameters
@@ -11,3 +11,5 @@ pub trait ViewportBuilder<T: Coord>: Debug {
     /// viewport: The absolute coordinates of the viewport to put the widgets inside
     fn build(&self, info: &GeometryInfo<T>, viewport: &Rect<T>) -> Vec<Widget<T>>;
 }
+
+pub type ViewportBuilder<T> = Box<dyn ViewportBuilderTrait<T>>;

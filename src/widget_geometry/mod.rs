@@ -1,15 +1,16 @@
-use crate::Coord;
+use crate::{Coord, Rect};
 
+pub mod constructor;
 mod generator;
-pub mod geometry;
+mod info;
 mod physical;
 mod update_info;
 
-pub use generator::{GeometryGenerator, GeometryInfo};
+pub use constructor as geometry;
+pub use generator::{GeometryGenerator, GeometryGeneratorTrait};
+pub use info::GeometryInfo;
 pub use physical::PhysicalGeometry;
 pub use update_info::GeometryUpdateStatus;
-
-use crate::Rect;
 
 /// A description of the position and size of a widget and how to generate the
 /// layout
@@ -18,7 +19,7 @@ pub struct Geometry<T: Coord> {
     /// The position and size of the widget
     physical: PhysicalGeometry<T>,
     /// The generator for constructing the physical geometry
-    generator: Box<dyn GeometryGenerator<T>>,
+    generator: GeometryGenerator<T>,
 }
 
 impl<T: Coord> Geometry<T> {
@@ -32,7 +33,7 @@ impl<T: Coord> Geometry<T> {
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
     pub(crate) fn new(
-        generator: Box<dyn GeometryGenerator<T>>,
+        generator: GeometryGenerator<T>,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
     ) -> Self {

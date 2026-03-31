@@ -1,14 +1,12 @@
-use crate::{Coord, GeometryGenerator, ViewportBuilder, geometry};
+use crate::{Coord, ViewportBuilder, ViewportConstructor, geometry};
 
-/// Constructs a single viewport constructor for a widget where the viewport
+/// Constructs a single viewport geometry for a widget where the viewport
 /// fills the entire widget
 ///
 /// # Parameters
 ///
 /// builder: The widget builder for populating the viewport
-pub fn single<T: Coord>(
-    builder: Box<dyn ViewportBuilder<T>>,
-) -> Vec<(Box<dyn ViewportBuilder<T>>, Box<dyn GeometryGenerator<T>>)> {
+pub fn single<T: Coord>(builder: ViewportBuilder<T>) -> ViewportConstructor<T> {
     let geometry = geometry::Constant::new_full();
 
     return vec![(builder, geometry)];
@@ -17,7 +15,7 @@ pub fn single<T: Coord>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{GeometryInfo, PhysicalGeometry, Point, Rect, Widget};
+    use crate::{GeometryInfo, PhysicalGeometry, Point, Rect, ViewportBuilderTrait, Widget};
 
     #[derive(Debug)]
     struct TestBuilder {}
@@ -28,7 +26,7 @@ mod tests {
         }
     }
 
-    impl<T: Coord> ViewportBuilder<T> for TestBuilder {
+    impl<T: Coord> ViewportBuilderTrait<T> for TestBuilder {
         fn build(&self, info: &GeometryInfo<T>, viewport: &Rect<T>) -> Vec<Widget<T>> {
             let widget = Widget::new(
                 geometry::Constant::new_centered(&Point {

@@ -15,7 +15,7 @@ pub(super) struct Viewport<T: Coord> {
     /// All widgets inside this viewport
     widgets: Vec<Rc<RefCell<Widget<T>>>>,
     /// The builder for this viewport
-    builder: Box<dyn ViewportBuilder<T>>,
+    builder: ViewportBuilder<T>,
 }
 
 impl<T: Coord> Viewport<T> {
@@ -31,8 +31,8 @@ impl<T: Coord> Viewport<T> {
     ///
     /// parent: The absolute coordinates of the parent widget geometry
     pub fn new(
-        builder: Box<dyn ViewportBuilder<T>>,
-        generator: Box<dyn GeometryGenerator<T>>,
+        builder: ViewportBuilder<T>,
+        generator: GeometryGenerator<T>,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
     ) -> Self {
