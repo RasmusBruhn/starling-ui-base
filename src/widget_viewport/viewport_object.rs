@@ -244,7 +244,7 @@ mod tests {
             },
             &parent,
         );
-        let correct_widgets: Vec<PhysicalGeometry<f64>> = vec![PhysicalGeometry::from_parent(
+        let correct_widgets = vec![PhysicalGeometry::from_parent(
             Rect {
                 ll: Point { x: 0.2, y: 0.4 },
                 ur: Point { x: 0.8, y: 0.6 },
@@ -299,7 +299,7 @@ mod tests {
             },
             &parent,
         );
-        let correct_widgets: Vec<PhysicalGeometry<f64>> = vec![PhysicalGeometry::from_parent(
+        let correct_widgets = vec![PhysicalGeometry::from_parent(
             Rect {
                 ll: Point { x: 0.2, y: 0.4 },
                 ur: Point { x: 0.8, y: 0.6 },
@@ -352,7 +352,7 @@ mod tests {
             },
             &parent,
         );
-        let correct_widgets: Vec<PhysicalGeometry<f64>> = vec![PhysicalGeometry::new_test()];
+        let correct_widgets = vec![PhysicalGeometry::new_test()];
 
         assert_eq!(result_status, correct_status);
         assert_eq!(result_viewport, correct_viewport);

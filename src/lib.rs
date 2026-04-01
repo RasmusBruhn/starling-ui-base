@@ -60,7 +60,16 @@ impl<T: Coord> Widget<T> {
         };
     }
 
+    /// Updates the widget and all its viewports
     ///
+    /// # Parameters
+    ///
+    /// info: The geometry info used to update
+    ///
+    /// parent: The absolute coordinates of the parent viewport
+    ///
+    /// force: If true then force update the geometry, otherwise only update if
+    /// scheduled
     pub(crate) fn update(
         &mut self,
         info: &GeometryInfo<T>,

@@ -141,19 +141,7 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let mut input = Geometry {
-            physical: PhysicalGeometry {
-                relative: Rect {
-                    ll: Point { x: 0.0, y: 0.0 },
-                    ur: Point { x: 0.0, y: 0.0 },
-                },
-                absolute: Rect {
-                    ll: Point { x: 0.0, y: 0.0 },
-                    ur: Point { x: 0.0, y: 0.0 },
-                },
-            },
-            generator,
-        };
+        let mut input = Geometry::new_test(generator);
 
         let result1 = input.update(&info, &viewport, true);
         let result2 = input.physical;
