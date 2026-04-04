@@ -9,7 +9,7 @@ use std::{
 
 /// A rectangular region inside a widget which can hold other widgets
 #[derive(Debug)]
-pub(super) struct Viewport<T: Coord> {
+pub struct Viewport<T: Coord> {
     /// The geometry of this viewport
     geometry: Geometry<T>,
     /// All widgets inside this viewport
@@ -30,7 +30,7 @@ impl<T: Coord> Viewport<T> {
     /// info: The info for building the geometry, sibling is guarenteed to be None
     ///
     /// parent: The absolute coordinates of the parent widget geometry
-    pub fn new(
+    pub(crate) fn new(
         builder: ViewportBuilder<T>,
         generator: GeometryGenerator<T>,
         info: &GeometryInfo<T>,
@@ -66,7 +66,7 @@ impl<T: Coord> Viewport<T> {
     ///
     /// force: If true then it forces the viewport to update, otherwise only
     /// updates if it is scheduled
-    pub fn update(
+    pub(crate) fn update(
         &mut self,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,

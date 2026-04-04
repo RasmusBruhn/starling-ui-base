@@ -15,7 +15,9 @@ pub use widget_geometry::{
     PhysicalGeometry, geometry,
 };
 use widget_viewport::ViewportList;
-pub use widget_viewport::{ViewportBuilder, ViewportBuilderTrait, ViewportConstructor, viewport};
+pub use widget_viewport::{
+    Viewport, ViewportBuilder, ViewportBuilderTrait, ViewportConstructor, viewport,
+};
 
 /// A generic widget, the base of all elements in the ui
 #[derive(Debug)]
@@ -70,7 +72,7 @@ impl<T: Coord> Widget<T> {
     ///
     /// force: If true then force update the geometry, otherwise only update if
     /// scheduled
-    pub(crate) fn update(
+    pub fn update(
         &mut self,
         info: &GeometryInfo<T>,
         parent: &Rect<T>,
@@ -89,6 +91,11 @@ impl<T: Coord> Widget<T> {
     /// Retrieves the current geometry of the widget
     pub fn get_geometry(&self) -> &PhysicalGeometry<T> {
         return self.geometry.get();
+    }
+
+    /// Constructs an iterator over all viewports
+    pub fn iter(&self) -> impl Iterator<Item = &Viewport<T>> {
+        return self.viewports.iter();
     }
 
     /// Constructs a new test widget with all geometries uninitialized to ((0,
@@ -117,6 +124,9 @@ impl<T: Coord> Widget<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn new() {}
 
     #[test]
     fn get_geometry() {

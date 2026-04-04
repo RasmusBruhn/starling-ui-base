@@ -8,7 +8,7 @@ mod viewport_object;
 
 pub use builder::{ViewportBuilder, ViewportBuilderTrait};
 pub use constructor as viewport;
-use viewport_object::Viewport;
+pub use viewport_object::Viewport;
 
 pub type ViewportConstructor<T> = Vec<(ViewportBuilder<T>, GeometryGenerator<T>)>;
 
@@ -69,6 +69,11 @@ impl<T: Coord> ViewportList<T> {
                 };
             })
             .fold(GeometryUpdateStatus::new(false), |a, b| a | b);
+    }
+
+    /// Constructs an iterator over all viewports
+    pub(crate) fn iter(&self) -> impl Iterator<Item = &Viewport<T>> {
+        return self.viewports.iter();
     }
 
     /// Constructs a new test viewport list with all geometries uninitialized to
@@ -231,5 +236,52 @@ mod tests {
         assert_eq!(result_status, correct_status);
         assert_eq!(result_viewport, correct_viewport);
         assert_eq!(result_widgets, correct_widgets);
+    }
+
+    #[test]
+    fn iter() {
+        let parent = Rect {
+            ll: Point { x: 15.0, y: 30.0 },
+            ur: Point { x: 35.0, y: 40.0 },
+        };
+        let info = GeometryInfo::without_sibling(parent.get_size());
+        let viewports = ViewportList::new(
+            vec![
+                (
+                    TestBuilder::new(),
+                    geometry::Constant::new_centered(&Point { x: 0.8, y: 0.6 }),
+                ),
+                (
+                    TestBuilder::new(),
+                    geometry::Constant::new_centered(&Point { x: 0.6, y: 0.4 }),
+                ),
+            ],
+            &info,
+            &parent,
+        );
+
+        let result = viewports
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct = vec![
+            PhysicalGeometry::from_parent(
+                Rect {
+                    ll: Point { x: 0.1, y: 0.2 },
+                    ur: Point { x: 0.9, y: 0.8 },
+                },
+                &parent,
+            ),
+            PhysicalGeometry::from_parent(
+                Rect {
+                    ll: Point { x: 0.2, y: 0.3 },
+                    ur: Point { x: 0.8, y: 0.7 },
+                },
+                &parent,
+            ),
+        ];
+
+        assert_eq!(result, correct);
     }
 }
