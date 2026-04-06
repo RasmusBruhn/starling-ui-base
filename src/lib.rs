@@ -82,7 +82,15 @@ impl<T: Coord> Widget<T> {
 
         // Update viewports if size has changed
         if status.absolute {
-            status.internal |= self.viewports.update(info, parent, status.absolute).any();
+            let info = info
+                .clone()
+                .new_viewport(self.geometry.get().absolute.get_size())
+                .remove_sibling();
+
+            status.internal |= self
+                .viewports
+                .update(&info, &self.geometry.get().absolute, status.absolute)
+                .any();
         }
 
         return status;
@@ -125,8 +133,246 @@ impl<T: Coord> Widget<T> {
 mod tests {
     use super::*;
 
+    #[derive(Debug)]
+    struct TestBuilder {}
+
+    impl TestBuilder {
+        fn new() -> Box<Self> {
+            return Box::new(Self {});
+        }
+    }
+
+    impl<T: Coord> ViewportBuilderTrait<T> for TestBuilder {
+        fn build(&self, _info: &GeometryInfo<T>, _viewport: &Rect<T>) -> Vec<Widget<T>> {
+            return Vec::new();
+        }
+    }
+
     #[test]
-    fn new() {}
+    fn new() {
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let viewports: ViewportConstructor<f64> = vec![(
+            TestBuilder::new(),
+            geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
+        )];
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let widget = Widget::new(generator, viewports, &info, &viewport);
+
+        let result_geometry = *widget.geometry.get();
+        let result_viewports = widget
+            .viewports
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct_geometry = PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: Rect {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+        let correct_viewports = vec![PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.2, y: 0.4 },
+                ur: Point { x: 0.8, y: 0.6 },
+            },
+            absolute: Rect {
+                ll: Point { x: 32.0, y: 9.2 },
+                ur: Point { x: 38.0, y: 10.8 },
+            },
+        }];
+
+        assert_eq!(result_geometry, correct_geometry);
+        assert_eq!(result_viewports, correct_viewports);
+    }
+
+    #[test]
+    fn update_all() {
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let viewports: Vec<(
+            ViewportBuilder<f64>,
+            GeometryGenerator<f64>,
+            Vec<Widget<f64>>,
+        )> = vec![(
+            TestBuilder::new(),
+            geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
+            Vec::new(),
+        )];
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let mut widget = Widget::new_test(generator, viewports);
+
+        let result_status = widget.update(&info, &viewport, true);
+        let result_geometry = *widget.geometry.get();
+        let result_viewports = widget
+            .viewports
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct_status = GeometryUpdateStatus {
+            relative: true,
+            absolute: true,
+            internal: true,
+        };
+        let correct_geometry = PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: Rect {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+        let correct_viewports = vec![PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.2, y: 0.4 },
+                ur: Point { x: 0.8, y: 0.6 },
+            },
+            absolute: Rect {
+                ll: Point { x: 32.0, y: 9.2 },
+                ur: Point { x: 38.0, y: 10.8 },
+            },
+        }];
+
+        assert_eq!(result_status, correct_status);
+        assert_eq!(result_geometry, correct_geometry);
+        assert_eq!(result_viewports, correct_viewports);
+    }
+
+    #[test]
+    fn update_outer() {
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let viewports: ViewportConstructor<f64> = vec![(
+            TestBuilder::new(),
+            geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
+        )];
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let parent_inner = Rect {
+            ll: Point { x: 30.0, y: 6.0 },
+            ur: Point { x: 40.0, y: 14.0 },
+        };
+        let info_inner = GeometryInfo::without_sibling(parent_inner.get_size());
+        let mut widget = Widget {
+            geometry: Geometry::new_test(generator),
+            viewports: ViewportList::new(viewports, &info_inner, &parent_inner),
+        };
+
+        let result_status = widget.update(&info, &viewport, true);
+        let result_geometry = *widget.geometry.get();
+        let result_viewports = widget
+            .viewports
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct_status = GeometryUpdateStatus {
+            relative: true,
+            absolute: true,
+            internal: false,
+        };
+        let correct_geometry = PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: Rect {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+        let correct_viewports = vec![PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.2, y: 0.4 },
+                ur: Point { x: 0.8, y: 0.6 },
+            },
+            absolute: Rect {
+                ll: Point { x: 32.0, y: 9.2 },
+                ur: Point { x: 38.0, y: 10.8 },
+            },
+        }];
+
+        assert_eq!(result_status, correct_status);
+        assert_eq!(result_geometry, correct_geometry);
+        assert_eq!(result_viewports, correct_viewports);
+    }
+
+    #[test]
+    fn update_none() {
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let viewports: Vec<(
+            ViewportBuilder<f64>,
+            GeometryGenerator<f64>,
+            Vec<Widget<f64>>,
+        )> = vec![(
+            TestBuilder::new(),
+            geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
+            Vec::new(),
+        )];
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let mut widget = Widget {
+            geometry: Geometry::new(generator, &info, &viewport),
+            viewports: ViewportList::new_test(viewports),
+        };
+
+        let result_status = widget.update(&info, &viewport, true);
+        let result_geometry = *widget.geometry.get();
+        let result_viewports = widget
+            .viewports
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct_status = GeometryUpdateStatus {
+            relative: false,
+            absolute: false,
+            internal: false,
+        };
+        let correct_geometry = PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.25, y: 0.1 },
+                ur: Point { x: 0.75, y: 0.9 },
+            },
+            absolute: Rect {
+                ll: Point { x: 30.0, y: 6.0 },
+                ur: Point { x: 40.0, y: 14.0 },
+            },
+        };
+        let correct_viewports = vec![PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.0, y: 0.0 },
+                ur: Point { x: 0.0, y: 0.0 },
+            },
+            absolute: Rect {
+                ll: Point { x: 0.0, y: 0.0 },
+                ur: Point { x: 0.0, y: 0.0 },
+            },
+        }];
+
+        assert_eq!(result_status, correct_status);
+        assert_eq!(result_geometry, correct_geometry);
+        assert_eq!(result_viewports, correct_viewports);
+    }
 
     #[test]
     fn get_geometry() {
@@ -138,7 +384,7 @@ mod tests {
         let info = GeometryInfo::without_sibling(viewport.get_size());
         let widget = Widget::new(generator, Vec::new(), &info, &viewport);
 
-        let result = widget.get_geometry();
+        let result = *widget.get_geometry();
 
         let correct = PhysicalGeometry {
             relative: Rect {
@@ -151,6 +397,39 @@ mod tests {
             },
         };
 
-        assert_eq!(result, &correct);
+        assert_eq!(result, correct);
+    }
+
+    #[test]
+    fn iter() {
+        let generator = geometry::Constant::new_centered(&Point { x: 0.5, y: 0.8 });
+        let viewport = Rect {
+            ll: Point { x: 25.0, y: 5.0 },
+            ur: Point { x: 45.0, y: 15.0 },
+        };
+        let viewports: ViewportConstructor<f64> = vec![(
+            TestBuilder::new(),
+            geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
+        )];
+        let info = GeometryInfo::without_sibling(viewport.get_size());
+        let widget = Widget::new(generator, viewports, &info, &viewport);
+
+        let result = widget
+            .iter()
+            .map(|viewport| *viewport.get_geometry())
+            .collect::<Vec<_>>();
+
+        let correct = vec![PhysicalGeometry {
+            relative: Rect {
+                ll: Point { x: 0.2, y: 0.4 },
+                ur: Point { x: 0.8, y: 0.6 },
+            },
+            absolute: Rect {
+                ll: Point { x: 32.0, y: 9.2 },
+                ur: Point { x: 38.0, y: 10.8 },
+            },
+        }];
+
+        assert_eq!(result, correct);
     }
 }
