@@ -34,6 +34,7 @@ mod tests {
                     y: T::from(0.2).unwrap(),
                 }),
                 Vec::new(),
+                true,
                 info,
                 viewport,
             );
@@ -55,7 +56,7 @@ mod tests {
         let viewports = single(TestBuilder::new());
         let geometry = geometry::Constant::new_centered(&Point { x: 0.8, y: 0.6 });
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let widget = Widget::new(geometry, viewports, &info, &viewport);
+        let widget = Widget::new(geometry, viewports, true, &info, &viewport);
 
         let (result_viewport_geometry, result_widget_geometry) = widget
             .viewports

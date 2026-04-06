@@ -156,6 +156,7 @@ mod tests {
                     y: T::from(0.2).unwrap(),
                 }),
                 Vec::new(),
+                true,
                 info,
                 viewport,
             );
@@ -218,6 +219,7 @@ mod tests {
         let widget = Widget::new_test(
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
             Vec::new(),
+            true,
         );
         let mut viewport = Viewport::new_test(
             TestBuilder::new(),
@@ -271,6 +273,7 @@ mod tests {
         let widget = Widget::new(
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
             Vec::new(),
+            true,
             &info,
             &viewport_rect,
         );
@@ -322,6 +325,7 @@ mod tests {
         let widget = Widget::new_test(
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
             Vec::new(),
+            true,
         );
         let mut viewport = Viewport {
             geometry: Geometry::new(
@@ -403,6 +407,7 @@ mod tests {
         let widget = Widget::new(
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
             Vec::new(),
+            true,
             &info,
             &viewport_rect,
         );

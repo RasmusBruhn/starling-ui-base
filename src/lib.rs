@@ -6,10 +6,12 @@
 //!
 
 mod primitives;
+mod state;
 mod widget_geometry;
 mod widget_viewport;
 
 pub use primitives::{Coord, Point, Rect};
+use state::State;
 pub use widget_geometry::{
     Geometry, GeometryGenerator, GeometryGeneratorTrait, GeometryInfo, GeometryUpdateStatus,
     PhysicalGeometry, geometry,
@@ -26,6 +28,8 @@ pub struct Widget<T: Coord> {
     geometry: Geometry<T>,
     /// All viewports for the widget
     viewports: ViewportList<T>,
+    /// The state of the widget
+    state: State,
 }
 
 impl<T: Coord> Widget<T> {
@@ -37,12 +41,15 @@ impl<T: Coord> Widget<T> {
     ///
     /// viewports: The builders and managers for all the viewports
     ///
+    /// active: Whther the widget is initially active
+    ///
     /// info: The info of parent and sibling widgets used to set the geometry
     ///
     /// viewport: The absolute coordinates of the viewport for this widget
     pub fn new(
         geometry: GeometryGenerator<T>,
         viewports: ViewportConstructor<T>,
+        active: bool,
         info: &GeometryInfo<T>,
         viewport: &Rect<T>,
     ) -> Self {
@@ -55,10 +62,12 @@ impl<T: Coord> Widget<T> {
                 .new_viewport(geometry.get().absolute.get_size()),
             &geometry.get().absolute,
         );
+        let state = State::new(active);
 
         return Self {
             geometry,
             viewports,
+            state,
         };
     }
 
@@ -114,17 +123,22 @@ impl<T: Coord> Widget<T> {
     /// geometry: The generator used to construct the geometry
     ///
     /// viewports: The builders, managers, and widgets for all the viewports
+    ///
+    /// bool: Whether the widget is initially active
     #[cfg(test)]
     pub(crate) fn new_test(
         geometry: GeometryGenerator<T>,
         viewports: Vec<(ViewportBuilder<T>, GeometryGenerator<T>, Vec<Widget<T>>)>,
+        active: bool,
     ) -> Self {
         let geometry = Geometry::new_test(geometry);
         let viewports = ViewportList::new_test(viewports);
+        let state = State::new(active);
 
         return Self {
             geometry,
             viewports,
+            state,
         };
     }
 }
@@ -160,7 +174,7 @@ mod tests {
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
         )];
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let widget = Widget::new(generator, viewports, &info, &viewport);
+        let widget = Widget::new(generator, viewports, true, &info, &viewport);
 
         let result_geometry = *widget.geometry.get();
         let result_viewports = widget
@@ -211,7 +225,7 @@ mod tests {
             Vec::new(),
         )];
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let mut widget = Widget::new_test(generator, viewports);
+        let mut widget = Widget::new_test(generator, viewports, true);
 
         let result_status = widget.update(&info, &viewport, true);
         let result_geometry = *widget.geometry.get();
@@ -272,6 +286,7 @@ mod tests {
         let mut widget = Widget {
             geometry: Geometry::new_test(generator),
             viewports: ViewportList::new(viewports, &info_inner, &parent_inner),
+            state: State::new(true),
         };
 
         let result_status = widget.update(&info, &viewport, true);
@@ -333,6 +348,7 @@ mod tests {
         let mut widget = Widget {
             geometry: Geometry::new(generator, &info, &viewport),
             viewports: ViewportList::new_test(viewports),
+            state: State::new(true),
         };
 
         let result_status = widget.update(&info, &viewport, true);
@@ -382,7 +398,7 @@ mod tests {
             ur: Point { x: 45.0, y: 15.0 },
         };
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let widget = Widget::new(generator, Vec::new(), &info, &viewport);
+        let widget = Widget::new(generator, Vec::new(), true, &info, &viewport);
 
         let result = *widget.get_geometry();
 
@@ -412,7 +428,7 @@ mod tests {
             geometry::Constant::new_centered(&Point { x: 0.6, y: 0.2 }),
         )];
         let info = GeometryInfo::without_sibling(viewport.get_size());
-        let widget = Widget::new(generator, viewports, &info, &viewport);
+        let widget = Widget::new(generator, viewports, true, &info, &viewport);
 
         let result = widget
             .iter()
